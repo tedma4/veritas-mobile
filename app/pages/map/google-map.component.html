@@ -1,0 +1,13 @@
+<ActionBar title="Map">
+  <NavigationButton text="Back"></NavigationButton>
+</ActionBar>
+
+<DockLayout style.backgroundColor="white" stretchLastChild="false" height="100%">
+  <GridLayout dock="top" height="90%">
+    <MapView (mapReady)="onMapReady($event)" (markerSelect)="onMarkerSelect($event)" ></MapView>
+  </GridLayout>
+
+  <StackLayout dock="bottom" height="10%" orientation="horizontal" class="navigationBar">
+    <navigation-bar></navigation-bar>
+  </StackLayout>
+</DockLayout>

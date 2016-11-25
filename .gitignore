@@ -1,5 +1,17 @@
 ###############
 # Directories #
 ###############
-node-modules/
+node_modules/
 platforms/
+
+###############
+# Types of files #
+###############
+app/components/**/*.js
+app/components/**/*.js.map
+app/models/**/*.js
+app/models/**/*.js.map
+app/pages/**/*.js
+app/pages/**/*.js.map
+app/services/**/*.js
+app/services/**/*.js.map

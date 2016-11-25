@@ -1,0 +1,12 @@
+<DockLayout backgroundColor="#222222" stretchLastChild="false" height="100%">
+  <StackLayout dock="top" height="60%" horizontalAlignment="center">
+    <Image src="res://gopostlogonoglow" class="logoImage"></Image>
+    <Image src="res://goposttitle" class="titleImage"></Image>
+  </StackLayout>
+
+  <StackLayout dock="bottom" height="40%">
+    <Button text="Log in" [nsRouterLink]="['/login']" pageTransition="none"></Button>
+    <Button text="Sign Up" [nsRouterLink]="['/pin']" pageTransition="none"></Button>
+  </StackLayout>
+</DockLayout>
+

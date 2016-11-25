@@ -1,0 +1,26 @@
+.small{
+  font-size: 10;
+}
+
+.medium{
+  font-size: 20;
+}
+
+.item{
+  padding: 15;
+}
+
+.text{
+  text-align: left;
+}
+
+.avatar{
+  width:50;
+  height: 50;
+  margin-right: 15;
+}
+
+.stack{
+  background-color: #ffffff;
+}
+

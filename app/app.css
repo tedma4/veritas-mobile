@@ -1,0 +1,57 @@
+﻿Page{
+  color: #222222;
+}
+
+TextField {
+  margin: 15 30;
+  color: #ffffff;
+  placeholder-color: #ffffff;
+  background-color: #444444;
+  border-width: 1;
+  border-color: #00eebc;
+  border-radius: 2;
+  height: 43;
+}
+
+Button {
+  font-size: 20;
+  background-color: #00eebc;
+  color: #222222;
+  margin: 15 30;
+}
+
+StackLayout {
+  background-color: #222222;
+}
+
+.lightGrayStack{
+  background-color: #333333;
+}
+
+ActionBar, .navigationBar{
+  background-color:#222222; 
+  color:#00eebc; 
+}
+
+.titleImage{
+  margin-top: 15;
+  width: 180;
+}
+
+.logoImage{
+  width: 200;
+  height: 200;
+  margin-top:20;
+}
+
+.back-arrow-pin {
+  width: 35;
+  height: 35;
+}
+
+.backArrow{
+  width: 35;
+  height: 35;
+  margin-left: 20;
+  margin-top: 20;
+}

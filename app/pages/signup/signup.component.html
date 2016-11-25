@@ -1,0 +1,10 @@
+<ActionBar title="Sign Up">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+</ActionBar>
+<StackLayout class="lightGrayStack">
+  <TextField [(ngModel)]="formModel.email"  hint="Email Address" keyboardType="email" autocorrect="false" autocapitalizationType="none"></TextField>
+  <TextField [(ngModel)]="formModel.password" hint="Password" secure="true"></TextField>
+  <TextField [(ngModel)]="formModel.password_confirmation" hint="Password Confirmation" secure="true"></TextField>
+  <Button text="Sign Up" (tap)="signUp()"></Button>
+  <ActivityIndicator busy={{isSigningUp}} height="50" width="50" color="#00eebc"></ActivityIndicator>
+</StackLayout>

@@ -1,0 +1,17 @@
+<ActionBar title="Notifications">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+</ActionBar>
+
+<ListView [items]="_notifications">
+  <template let-item="item">
+    <DockLayout width="100%" height="80" class="item" backgroundColor="#ffffff" stretchLastChild="false" (tap)="selectNotification(item)">
+      <StackLayout orientation="horizontal" width="100%" dock="left" class="stack">
+        <Image src="{{item.user.avatar}}" class="avatar"></Image>
+        <StackLayout class="stack">
+          <Label text="{{item.user.first_name + ' ' + item.user.last_name}}" class="medium text"></Label>
+          <Label [text]="item.notice_type" class="small text"></Label>
+        </StackLayout>
+      </StackLayout>
+    </DockLayout>
+  </template>
+</ListView>

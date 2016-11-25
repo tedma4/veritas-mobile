@@ -1,0 +1,43 @@
+<ActionBar title="Settings">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+  <ActionItem (tap)="saveChanges()" ios.position="right"
+    text="Save" android.position="actionBarIfRoom" icon="res://done">
+  </ActionItem> 
+</ActionBar>
+<StackLayout class="lightGrayStack" horizontalAlignment="center">
+  <Image id="avatar" class="avatar" height="30%" (tap)="changeAvatar()"></Image>
+  <ScrollView orientation="vertical" height="70%">
+    <StackLayout backgroundColor="#555555">
+      <StackLayout class="lightGrayStack form-list-element element-margin">
+        <Label text="First Name" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.first_name" class="list-field" secure="false" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+      <StackLayout class="lightGrayStack form-list-element element-margin">
+        <Label text="Last Name" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.last_name" class="list-field" secure="false" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+      <StackLayout class="lightGrayStack form-list-element element-margin">
+        <Label text="Username" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.user_name" class="list-field" secure="false" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+      <StackLayout class="lightGrayStack form-list-element element-margin">
+        <Label text="Email" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.email" class="list-field" secure="false" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+      <StackLayout class="lightGrayStack form-list-element element-margin">
+        <Label text="Password" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.password" class="list-field" secure="true" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+      <StackLayout class="lightGrayStack form-list-element">
+        <Label text="Confirm Password" class="list-label"></Label>
+        <TextField [(ngModel)]="formModel.password_confirmation" class="list-field" secure="true" autocorrect="false" automationText="none">
+        </TextField>
+      </StackLayout>
+    </StackLayout>
+  </ScrollView> 
+</StackLayout>

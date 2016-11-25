@@ -1,0 +1,28 @@
+.list-label{
+  color: #00eebc;
+  font-size: 13;
+  margin-bottom: 5;
+}
+
+.list-field{
+  border-width: 0;
+  background-color: #333333;
+  color: #ffffff;
+  height: 43;
+  margin: 0;
+  width: 100%;
+}
+
+.form-list-element{
+  padding-top: 10;
+  padding-left: 10;
+}
+
+.element-margin{
+  margin-bottom: 1;
+}
+
+.avatar{
+  width: 150;
+  height: 150;
+}

@@ -1,0 +1,20 @@
+<ActionBar title="My friends">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+  <ActionItem (tap)="goToAddUser()" ios.position="right"
+    text="Add User" android.position="actionBarIfRoom" icon="res://addperson">
+  </ActionItem> 
+</ActionBar>
+
+<ListView [items]="_users">
+  <template let-item="item">
+    <DockLayout width="100%" height="80" class="item" backgroundColor="#ffffff" stretchLastChild="false" (tap)="unfriendUser(item)">
+      <StackLayout orientation="horizontal" width="100%" dock="left" class="stack">
+        <Image src="{{item.avatar}}" class="avatar"></Image>
+        <StackLayout class="stack">
+          <Label [text]="item.first_name" class="medium text"></Label>
+          <Label [text]="item.last_name" class="small text"></Label>
+        </StackLayout>
+      </StackLayout>
+    </DockLayout>
+  </template>
+</ListView>
