@@ -12,6 +12,7 @@ var config = require("../../shared/config");
   styleUrls: ['pages/friend-list/friend-list.component.css', 'app.css'],
   templateUrl: 'pages/friend-list/friend-list.component.html'
 })
+
 export class FriendListComponent implements OnInit{
   public _users = [];
   public _apiUrl:string;

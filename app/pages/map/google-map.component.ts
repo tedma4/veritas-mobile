@@ -52,7 +52,7 @@ export class GoogleMapComponent {
   private requestPostsForMap(){
     this._mapService.getUsersAround(this.location.latitude, this.location.longitude).subscribe(loadedPosts => {
       loadedPosts.forEach((post) => {
-        this.setMarkerOnMap(post.location.latitude, post.location.longitude, post.user.first_name, post.user.user_name, 'blue', post.image);
+        this.setMarkerOnMap(post.caption, post.location.latitude, post.location.longitude, post.user.first_name, post.user.user_name, 'blue', post.image);
         this.posts.unshift(post);
         console.log(JSON.stringify(post));
       });
@@ -64,25 +64,30 @@ export class GoogleMapComponent {
     this.mapAPIObject.latitude = this.location.latitude;
     this.mapAPIObject.longitude = this.location.longitude;
     this.mapAPIObject.zoom = 5;
-    this.setMarkerOnMap(this.location.latitude, this.location.longitude, 'User', 'Current User', 'green', 'noUrl');
+    this.setMarkerOnMap('', this.location.latitude, this.location.longitude, 'User', 'Current User', 'green', 'noUrl');
   }
 
-  private setMarkerOnMap(latitude, longitude, title, snippet, color, url){
+  private setMarkerOnMap(caption, latitude, longitude, title, snippet, color, url){
     let marker = new mapsModule.Marker();
     marker.position = mapsModule.Position.positionFromLatLng(latitude, longitude);
     marker.title = title;
     marker.snippet = snippet;
 
     //marker.icon = new Color(color);
-    marker.userData = { url : url};
+    marker.userData = {
+      url : url,
+      caption: caption
+    };
     this.mapAPIObject.addMarker(marker);
   }
 
   onMarkerSelect = (event) => {
     let url:string = event.marker.userData.url;
+    let caption:string = event.marker.userData.caption || '';
+    url = url.replace(/\//g, "slashy");
+    caption = caption.replace(/\//g, "slashy");
     if(url != 'noUrl'){
-      this._imageService.imageUrl = url;
-      this.routerExtensions.navigate(["/post"], { animated: false });
+      this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
     }
   }
 }

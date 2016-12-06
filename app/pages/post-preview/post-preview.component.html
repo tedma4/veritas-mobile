@@ -1,0 +1,33 @@
+<ActionBar title="Preview">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+  <ActionItem ios.position="right"
+    text="Add Text" (tap)="setTextLimit()" android.position="actionBarIfRoom" icon="res://pencil">
+  </ActionItem> 
+</ActionBar>
+
+<AbsoluteLayout width="100%" height="100%" class="transparent">
+  <StackLayout left="0" top="0" width="100%" height="100%" class="transparent">
+    <Image id="previewImage"></Image>
+  </StackLayout>
+  <DockLayout left="0" top="0" width="100%" height="100%" class="transparent" stretchLastChild="false">
+    <TextView visibility="{{ displayCaption ? 'visible' : 'collapsed' }}" dock="top" width="100%" id="textCaption" 
+      height="auto" class="caption" secure="false" autocorrect="false" automationText="none">
+    </TextView>
+    <StackLayout dock="bottom" height="80" width="100%" class="bar" orientation="horizontal">
+      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makePublicPost()" pageTransition="none" class="transparent">
+        <Image src="res://publicp" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image>
+        <Label text="Public" textAlignment="center" textWrap="true" class="title"></Label> 
+      </StackLayout>
+
+      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makeNonPublicPost('hidden')" class="transparent">
+        <Image src="res://hidden" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+        <Label text="Hidden" textAlignment="center" textWrap="true" class="title"></Label> 
+      </StackLayout>
+
+      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makeNonPublicPost('memory')" pageTransition="none" class="transparent">
+        <Image src="res://cloud" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+        <Label text="Memory" textAlignment="center" textWrap="true" class="title"></Label> 
+      </StackLayout>
+    </StackLayout>
+  </DockLayout>
+</AbsoluteLayout>

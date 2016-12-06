@@ -45,7 +45,6 @@ export class MapService {
       console.log('before location promise');
       geolocation.getCurrentLocation({desiredAccuracy: 3, minimumUpdateTime:10000, maximumAge:10000, timeout:10000})
       .then(location => {
-        console.log(location);
         locationObserver.next(location);
         locationObserver.complete();
       }, (e) => {

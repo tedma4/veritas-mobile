@@ -1,0 +1,24 @@
+<ActionBar title="Select friends">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+  <ActionItem (tap)="makePost()" ios.position="right"
+    text="Make Post" android.position="actionBarIfRoom" icon="res://done">
+  </ActionItem> 
+</ActionBar>
+<ActivityIndicator busy={{isLoadingFriends}} height="50" width="50" color="#00eebc"></ActivityIndicator>
+<ListView [items]="_users" *ngIf="!isLoadingFriends">
+  <template let-item="item">
+    <DockLayout width="100%" height="80" class="item" backgroundColor="#ffffff" stretchLastChild="false">
+      <StackLayout orientation="horizontal" width="70%" dock="left" class="stack">
+        <Image src="{{item.avatar}}" class="avatar"></Image>
+        <StackLayout class="stack">
+          <Label [text]="item.first_name" class="medium text"></Label>
+          <Label [text]="item.last_name" class="small text"></Label>
+        </StackLayout>
+      </StackLayout>
+      <StackLayout width="30%" dock="right" class="stack">
+        <Image src="res://checked" class="checkbox" *ngIf="item.checked" (tap)="item.checked = false"></Image>
+        <Image src="res://unchecked" class="checkbox" *ngIf="!item.checked" (tap)="item.checked = true"></Image>
+      </StackLayout>
+    </DockLayout>
+  </template>
+</ListView>

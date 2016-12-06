@@ -1,0 +1,33 @@
+.small{
+  font-size: 13;
+}
+
+.medium{
+  font-size: 20;
+}
+
+.item{
+  padding: 15;
+}
+
+.text{
+  text-align: left;
+  color:#222222;
+}
+
+.checkbox{
+  height: 30;
+  margin-top: 10;
+  margin-bottom: 10;
+}
+
+.avatar{
+  width:50;
+  height: 50;
+  margin-right: 15;
+}
+
+.stack{
+  background-color: #ffffff;
+}
+

@@ -34,9 +34,12 @@ export class HomeComponent implements OnInit{
   
   public onPostSelect(post:Post){
     let url:string = post.image;
+    let caption:string = post.caption || '';
+    url = url.replace(/\//g, "slashy");
+    caption = caption.replace(/\//g, "slashy");
     if(url){
-      this._imageService.imageUrl = url;
-      this.routerExtensions.navigate(["/post"], { animated: false });
+      this._imageService.imageUrl = url; 
+      this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
     }
   }
 }

@@ -7,6 +7,14 @@ platforms/
 ###############
 # Types of files #
 ###############
+app/app.module.js
+app/app.module.js.map
+app/app.routing.js
+app/app.routing.js.map
+app/app.component.js
+app/app.component.js.map
+app/auth-guard.service.js
+app/auth-guard.service.js.map
 app/components/**/*.js
 app/components/**/*.js.map
 app/models/**/*.js

@@ -6,6 +6,7 @@ interface PostJSON{
 	created_at: string;
 	image: string;
 	location: Location;
+	caption: string;
 	hidden: boolean;
 	user: User;
 }
@@ -15,11 +16,11 @@ export class Post{
 	private _created_at: string;
 	private _image: string;
 	private _location: Location;
+	private _caption:string;
 	private _hidden: boolean;
 	private _user: User;
 
 	constructor(object:any){
-
 	  this._id = object && object.id || object && object._id || undefined;
 	  this._created_at = object && object.created_at || object && object._created_at || undefined;
 	  this._image = object && object.image || object && object._image || undefined;
@@ -28,6 +29,7 @@ export class Post{
 		}else{
 			this._location = new Location(object._location);
 		}
+		this._caption = object && object.caption || object && object._caption || undefined;
 	  this._hidden = object && object.hidden || object && object._hidden || undefined;
 		if(object.user){
 			this._user = new User(object.user);	
@@ -68,6 +70,14 @@ export class Post{
 
 	public set location(value: Location) {
 		this._location = value;
+	}
+
+	public get caption(): string {
+		return this._caption;
+	}
+
+	public set caption(value: string) {
+		this._caption = value;
 	}
 
 	public get hidden(): boolean {

@@ -7,6 +7,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { PinComponent } from './pages/signup/pin.component';
 import { PostComponent } from './pages/post/post.component';
+import { PostPreviewComponent } from './pages/post-preview/post-preview.component';
+import { PostUserSelectionComponent } from './pages/post-user-selection/post-user-selection.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
@@ -23,7 +25,11 @@ export const routes = [
   { path: 'login', component: LoginComponent},
   { path: 'pin', component: PinComponent},
   { path: 'signup', component: SignupComponent},
-  { path: 'post', component: PostComponent, canActivate: [AuthGuard]},
+  { path: 'post/:imageUrl/:caption', component: PostComponent, canActivate: [AuthGuard]},
+  { path: 'post/:imageUrl', component: PostComponent, canActivate: [AuthGuard]},
+  { path: 'post-preview', component: PostPreviewComponent, canActivate: [AuthGuard]},
+  { path: 'post-user-selection/:postType/:caption', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
+  { path: 'post-user-selection/:postType', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]}
@@ -39,6 +45,8 @@ export const navigatableComponents = [
   PinComponent,
   SignupComponent,
   PostComponent,
+  PostPreviewComponent,
+  PostUserSelectionComponent,
   HomeComponent,
   SettingsComponent,
   NotificationsComponent
