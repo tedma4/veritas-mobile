@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, ElementRef} from "@angular/core";
 import {RouterExtensions, PageRoute} from "nativescript-angular/router";
 import {Page} from "ui/page";
 import {Color} from "color";
+import platformModule = require("platform");
 import imageSource = require("image-source");
 import imageModule = require("ui/image");
 import enumsModule = require('ui/enums');
@@ -14,9 +15,12 @@ import enumsModule = require('ui/enums');
 export class PostComponent implements OnInit{
   public isImageLoading: boolean = true;
   public displayCaption: boolean = false;
+  public screenWidth:number;
+  public screenHeight:number;
   public _caption:string = '';
   private _imageUrl:string = '';
   private postImage:any;
+  private absoluteContainer:any;
 
   constructor(
     private routerExtensions: RouterExtensions,
@@ -36,8 +40,10 @@ export class PostComponent implements OnInit{
   ngOnInit() {
     this.page.actionBarHidden = true;
     this.page.backgroundColor = new Color('#222222');
+    this.screenWidth = platformModule.screen.mainScreen.widthDIPs;
+    this.screenHeight = platformModule.screen.mainScreen.heightDIPs;
     this.isImageLoading = true;
-    
+
     imageSource.fromUrl(this._imageUrl)
     .then(res => {
       this.isImageLoading = false;

@@ -7,6 +7,8 @@ platforms/
 ###############
 # Types of files #
 ###############
+app/main.js
+app/main.js.map
 app/app.module.js
 app/app.module.js.map
 app/app.routing.js
