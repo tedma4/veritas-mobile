@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {RouterExtensions, PageRoute} from "nativescript-angular/router";
+import {RouterExtensions} from "nativescript-angular/router";
 import {UserService} from "../../services/users/user.service";
 import {PostService} from "../../services/post/post.service";
 import imageSource = require("image-source");
@@ -14,27 +14,16 @@ import {Color} from "color";
 })
 
 export class PostUserSelectionComponent implements OnInit{
+  private postDataToSend:any;
   public isLoadingFriends: boolean = false;
   public _users = [];
-  private _postType:string = '';
-  private _caption:string = '';
-  private _location:any = {};
-  private imageAsset:any = {};
 
   constructor(
     private _userService: UserService,
     private _postService: PostService,
     private routerExtensions: RouterExtensions,
-    private pageRoute: PageRoute,
     private page: Page
-  ) {
-    this.pageRoute.activatedRoute
-    .switchMap(activatedRoute => activatedRoute.params)
-    .forEach((params) => {
-      this._postType = params['postType'];
-      this._caption = params['caption'] || '';
-    });
-  }
+  ) {}
 
   ngOnInit() {
     this.page.backgroundColor = new Color('#222222');
@@ -48,6 +37,7 @@ export class PostUserSelectionComponent implements OnInit{
       this.isLoadingFriends = false;
       this.goBack();
     });
+    this.postDataToSend = this._postService.postDataToSend;
   }
 
   public makePost(){
@@ -56,10 +46,12 @@ export class PostUserSelectionComponent implements OnInit{
       alert('Select at least one friend');
       return;
     }
-    this._postService.processPost(this._caption, friendIds, this._postType).subscribe(respose => {
+    this.postDataToSend.friendIds = friendIds;
+    this._postService.processPost(this.postDataToSend).subscribe(respose => {
     }, error => {
       alert(error);
     });
+    this._postService.postDataToSend = {};
     this.routerExtensions.navigate(["/home"], { animated: false, clearHistory: true });
   }
 

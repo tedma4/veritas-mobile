@@ -13,16 +13,16 @@ import enumsModule = require('ui/enums');
 
 @Component({
   selector: "post-preview",
-  providers: [PostService],
   styleUrls: ['pages/post-preview/post-preview.component.css', 'app.css'],
   templateUrl: 'pages/post-preview/post-preview.component.html'
 })
 export class PostPreviewComponent implements OnInit{
   private imageAsset:any = {};
-  public screenWidth:number;
-  public postBarSectionWidth:number;
+  private postDataToSend:any = {};
   private previewImage:any;
   private caption:string = '';
+  public screenWidth:number;
+  public postBarSectionWidth:number;
   public displayCaption:boolean = false;
   
   constructor(
@@ -33,6 +33,7 @@ export class PostPreviewComponent implements OnInit{
   ) {}
 
   ngOnInit() {
+    this.postDataToSend = this._postService.postDataToSend;
     this.screenWidth = platformModule.screen.mainScreen.widthDIPs;
     this.postBarSectionWidth = this.screenWidth / 3;
 
@@ -70,17 +71,34 @@ export class PostPreviewComponent implements OnInit{
     }, 500);
   }
 
-
-  public makePublicPost(){
-    this._postService.processPost(this.caption, [], 'public').subscribe(respose => {
+  private postAndReturnHome(postDataToSend){
+    this._postService.processPost(postDataToSend).subscribe(respose => {
     }, error => {
       alert(error);
     });
+    this._postService.postDataToSend = {};
     this.routerExtensions.navigate(["/home"], { animated: false, clearHistory: true });
   }
 
+  public makePublicPost(){
+    this.postDataToSend.caption = this.caption;
+    this.postDataToSend.friendIds = [];
+    this.postDataToSend.postType = 'public';
+    this.postAndReturnHome(this.postDataToSend);
+  }
+
+  public makeReplyPost(){
+    this.postDataToSend.caption = this.caption;
+    this.postDataToSend.friendIds = [];
+    this.postDataToSend.postType = 'reply';
+    this.postAndReturnHome(this.postDataToSend);
+  }
+
   makeNonPublicPost(postType:string){
-    this.routerExtensions.navigate(["/post-user-selection/" + postType + "/" + this.caption], {animated: false});
+    this.postDataToSend.caption = this.caption;
+    this.postDataToSend.postType = postType;
+    this._postService.postDataToSend = this.postDataToSend;
+    this.routerExtensions.navigate(["/post-user-selection/"], {animated: false});
   }
 
   public goBack():void{

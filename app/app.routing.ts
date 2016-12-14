@@ -28,8 +28,7 @@ export const routes = [
   { path: 'post/:imageUrl/:caption', component: PostComponent, canActivate: [AuthGuard]},
   { path: 'post/:imageUrl', component: PostComponent, canActivate: [AuthGuard]},
   { path: 'post-preview', component: PostPreviewComponent, canActivate: [AuthGuard]},
-  { path: 'post-user-selection/:postType/:caption', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
-  { path: 'post-user-selection/:postType', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
+  { path: 'post-user-selection', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]}

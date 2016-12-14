@@ -7,6 +7,7 @@ import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import {SessionService} from "./services/sessions/session.service";
 import {ImageService} from "./services/images/image.service";
+import {PostService} from "./services/post/post.service";
 import {MapService} from "./services/maps/map.service"; 
 
 import { AuthGuard } from "./auth-guard.service";
@@ -26,7 +27,7 @@ import { routes, navigatableComponents } from "./app.routing";
     NavigationBarComponent,
     ...navigatableComponents
   ],
-  providers: [SessionService, ImageService, MapService, AuthGuard],
+  providers: [SessionService, ImageService, MapService, PostService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -7,7 +7,7 @@ import {UserService} from "../../services/users/user.service";
 import {Page} from "ui/page";
 import imageModule = require("ui/image");
 import imageSource = require("image-source");
-var cameraModule = require("camera");
+import * as camera from "nativescript-camera";
 
 @Component({
   selector: "settings",
@@ -28,6 +28,7 @@ export class SettingsComponent implements OnInit{
   ) {}
 
   ngOnInit(){
+    camera.requestPermissions();
     this.sessionData = this._sessionService.getCurrentSession();
     this.prefillForm(this.sessionData); 
     this.avatar = this.page.getViewById('avatar') as imageModule.Image;
@@ -63,10 +64,15 @@ export class SettingsComponent implements OnInit{
   }
   
   public changeAvatar(){
-    cameraModule.takePicture({width: 300, height: 300, keepAspectRatio: true}).then(picture => {
-      this.avatar.imageSource = picture;
-      this.formModel.avatar = picture.toBase64String('jpeg');
-    }); 
+    if(camera.isAvailable()){
+      camera.takePicture({width: 300, height: 300, keepAspectRatio: true, saveToGallery: false}).then(imageAsset => {
+        let source = new imageSource.ImageSource();
+        source.fromAsset(imageAsset).then((imageSourceData) => {
+          this.avatar.imageSource = imageSourceData;
+          this.formModel.avatar = imageSourceData.toBase64String('jpeg');
+        });
+      });
+    }
   }
 
   public goBack(){

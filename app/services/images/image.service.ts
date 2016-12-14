@@ -14,22 +14,27 @@ export class ImageService {
   constructor(private _http: Http, private _sessionService: SessionService) {}
   private _currentSession:Session;
 
-  uploadImage(caption:string, image:string, location: any, postType:string, friendIds){
+  uploadImage(postData){
     this._currentSession = this._sessionService.getCurrentSession();
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
+    let url = config.apiUrl + "/v1/posts";
+    if(postData.postType === 'reply'){
+      url = url.concat('?user_replying_to=' + postData.userId + '&');
+      url = url.concat('post_replying_to=' + postData.postId);
+    }
     let payload = {
       user_id: this._currentSession.user.id,
-      post_type: postType,
-      caption: caption,
+      post_type: postData.postType,
+      caption: postData.caption,
       post:{
-        attachment:image
+        attachment:postData.imageData
       },
-      location:[location.longitude, location.latitude],
-      selected_users: friendIds
+      location:[postData.location.longitude, postData.location.latitude],
+      selected_users: postData.friendIds
     };
     return this._http.post(
-      config.apiUrl + "/v1/posts",
+      url,
       JSON.stringify(payload),
       { headers: headers }
     )

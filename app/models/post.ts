@@ -9,6 +9,7 @@ interface PostJSON{
 	caption: string;
 	hidden: boolean;
 	user: User;
+	liked: boolean;
 }
 
 export class Post{
@@ -19,6 +20,7 @@ export class Post{
 	private _caption:string;
 	private _hidden: boolean;
 	private _user: User;
+	private _liked:boolean;
 
 	constructor(object:any){
 	  this._id = object && object.id || object && object._id || undefined;
@@ -36,6 +38,7 @@ export class Post{
 		}else{
 			this._user = new User(object._user);
 		}
+	  this._liked = object && object.liked || object && object._liked || undefined;
 	}
 
 	public get id(): string {
@@ -94,5 +97,13 @@ export class Post{
 
 	public set user(value: User) {
 		this._user = value;
+	}
+
+	public get liked(): boolean {
+		return this._liked;
+	}
+
+	public set liked(value: boolean) {
+		this._liked = value;
 	}
 } 

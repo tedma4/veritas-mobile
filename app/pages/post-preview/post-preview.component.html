@@ -13,20 +13,27 @@
     <TextView visibility="{{ displayCaption ? 'visible' : 'collapsed' }}" dock="top" width="100%" id="textCaption" 
       height="auto" class="caption" secure="false" autocorrect="false" automationText="none">
     </TextView>
-    <StackLayout dock="bottom" height="80" width="100%" class="bar" orientation="horizontal">
-      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makePublicPost()" pageTransition="none" class="transparent">
-        <Image src="res://publicp" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image>
+    <StackLayout dock="bottom" height="80" width="100%" class="bar" orientation="horizontal" *ngIf="postDataToSend.postType !== 'reply'">
+      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makePublicPost()" class="transparent">
+        <Image src="res://publicp" class="post-icon" horizontalAlignment="center"></Image>
         <Label text="Public" textAlignment="center" textWrap="true" class="title"></Label> 
       </StackLayout>
 
       <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makeNonPublicPost('hidden')" class="transparent">
-        <Image src="res://hidden" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+        <Image src="res://hidden" class="post-icon" horizontalAlignment="center"></Image> 
         <Label text="Hidden" textAlignment="center" textWrap="true" class="title"></Label> 
       </StackLayout>
 
-      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makeNonPublicPost('memory')" pageTransition="none" class="transparent">
-        <Image src="res://cloud" class="post-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+      <StackLayout orientation="vertical" height="100%" width="{{postBarSectionWidth}}" (tap)="makeNonPublicPost('memory')" class="transparent">
+        <Image src="res://cloud" class="post-icon" horizontalAlignment="center"></Image> 
         <Label text="Memory" textAlignment="center" textWrap="true" class="title"></Label> 
+      </StackLayout>
+    </StackLayout>
+
+    <StackLayout dock="bottom" height="80" width="100%" class="bar" orientation="horizontal" *ngIf="postDataToSend.postType === 'reply'">
+      <StackLayout orientation="vertical" height="100%" width="100%" class="transparent">
+        <Image src="res://reply" class="post-icon" horizontalAlignment="center" (tap)="makeReplyPost()"></Image>
+        <Label text="Reply" textAlignment="center" textWrap="true" class="title" (tap)="makeReplyPost()"></Label> 
       </StackLayout>
     </StackLayout>
   </DockLayout>

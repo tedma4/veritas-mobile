@@ -23,6 +23,8 @@
 }
 
 .avatar{
-  width: 150;
-  height: 150;
+  width: 200;
+  height: 30%;
+  padding-top: 15;
+  padding-bottom: 15;
 }
