@@ -9,7 +9,7 @@
   <template let-item="item">
     <DockLayout width="100%" height="80" class="item" backgroundColor="#ffffff" stretchLastChild="false">
       <StackLayout orientation="horizontal" width="70%" dock="left" class="stack">
-        <Image src="{{item.avatar}}" class="avatar"></Image>
+        <Image src="{{item.avatar}}" class="avatar" stretch="aspectFill"></Image>
         <StackLayout class="stack">
           <Label [text]="item.first_name" class="medium text"></Label>
           <Label [text]="item.last_name" class="small text"></Label>

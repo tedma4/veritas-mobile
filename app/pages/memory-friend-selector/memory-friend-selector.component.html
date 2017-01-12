@@ -1,0 +1,22 @@
+<ActionBar title="Memories">
+  <NavigationButton text="Go Back" icon="res://back" (tap)="goBack()"></NavigationButton>
+</ActionBar>
+
+<AbsoluteLayout width="100%" height="100%" class="transparent">
+  <StackLayout [visibility]="pageContent" class="stack" width="100%" height="100%" left="0" top="0">
+    <ListView [items]="_users" id="list" width="100%" height="100%">
+      <template let-item="item">
+        <StackLayout orientation="horizontal" height="80" width="100%" class="item" backgroundColor="#ffffff" (tap)="onUserSelect(item)">
+          <Image src="{{item.avatar}}" class="avatar" stretch="aspectFill"></Image>
+          <StackLayout class="stack">
+            <Label [text]="item.first_name" class="medium text"></Label>
+            <Label [text]="item.last_name" class="small text"></Label>
+          </StackLayout>
+        </StackLayout>
+      </template>
+    </ListView>
+  </StackLayout>
+
+  <ActivityIndicator busy={{isDataLoading}} height="50" width="50" color="#00eebc" left="{{(screenWidth / 2) - 25}}" top="{{(screenHeight /2 ) - 25}}">
+  </ActivityIndicator>
+</AbsoluteLayout>

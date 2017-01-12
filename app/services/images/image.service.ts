@@ -58,6 +58,22 @@ export class ImageService {
     .catch(this.handleErrors);
   }
 
+  getMemories(friendId:string){
+    this._currentSession = this._sessionService.getCurrentSession();
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    return this._http.get(config.apiUrl + "/v1/get_memories?user_id=" + this._currentSession.user.id + "&friend_id=" + friendId, { headers: headers })
+    .map(res => res.json())
+    .map(data => {
+      let postList = [];
+      data.forEach((image) => {
+        postList.push(new Post(image));
+      });
+      return postList;
+    })
+    .catch(this.handleErrors);
+  }
+
   handleErrors(error: Response) {
     console.log(error.url);
     console.log(error.status);

@@ -13,3 +13,7 @@ android {
     additionalParameters "--no-version-vectors"  
   }  
 } 
+
+project.ext {
+    googlePlayServicesVersion = "9.6.1"
+}

@@ -6,6 +6,7 @@ import {MapService} from "../../services/maps/map.service";
 import imageSourceModule = require("image-source");
 import {SessionService} from "../../services/sessions/session.service";
 import {Session} from "../../models/session";
+import {User} from "../../models/user";
 var config = require("../../shared/config");
 
 @Injectable()
@@ -40,6 +41,22 @@ export class PostService {
       url, {}, { headers: headers }
     )
     .map(res => res.json())
+    .catch(this.handleErrors);
+  }
+
+  public getMemoryFriendList(){
+    this._currentSession = this._sessionService.getCurrentSession();
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    return this._http.get(config.apiUrl + "/v1/memories?user_id=" + this._currentSession.user.id, { headers: headers })
+    .map(res => res.json())
+    .map(data => {
+      let userList = [];
+      data.forEach((user) => {
+        userList.push(new User(user));
+      });
+      return userList;
+    })
     .catch(this.handleErrors);
   }
 

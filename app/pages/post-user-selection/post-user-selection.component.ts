@@ -8,7 +8,7 @@ import {Color} from "color";
 
 @Component({
   selector: "post-user-selection",
-  providers: [UserService, PostService],
+  providers: [UserService],
   styleUrls: ['pages/post-user-selection/post-user-selection.component.css', 'app.css'],
   templateUrl: 'pages/post-user-selection/post-user-selection.component.html'
 })
@@ -42,10 +42,12 @@ export class PostUserSelectionComponent implements OnInit{
 
   public makePost(){
     let friendIds = this.getFriendIds();
+    console.log(JSON.stringify(friendIds));
     if(friendIds.length === 0){
       alert('Select at least one friend');
       return;
     }
+    console.log(JSON.stringify(this.postDataToSend));
     this.postDataToSend.friendIds = friendIds;
     this._postService.processPost(this.postDataToSend).subscribe(respose => {
     }, error => {

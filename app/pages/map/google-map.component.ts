@@ -2,11 +2,15 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import { RouterExtensions } from "nativescript-angular/router";
 import {MapService} from "../../services/maps/map.service";
 import {ImageService} from "../../services/images/image.service";
+import {PostService} from "../../services/post/post.service";
 import { NavigationBarComponent } from '../../components/navigation-bar/navigation-bar.component';
 var mapsModule = require("nativescript-google-maps-sdk");
 import {Color} from "color";
+import {Post} from "../../models/post";
 
 import {registerElement} from "nativescript-angular/element-registry";
+import ImageModule = require("ui/image");
+import ImageSourceModule = require("image-source");
 import {topmost} from "ui/frame";
 import {Page} from "ui/page";
 declare var com: any;
@@ -17,7 +21,6 @@ registerElement("MapView", () => mapsModule.MapView);
 @Component({
   selector: 'google-map',
   styleUrls: ['pages/map/google-map.component.css', 'app.css'],
-  providers: [MapService],
   templateUrl: 'pages/map/google-map.component.html'
 })
 
@@ -25,6 +28,7 @@ export class GoogleMapComponent {
   constructor(
     private _mapService: MapService, 
     private _imageService: ImageService, 
+    private _postService: PostService,
     private routerExtensions: RouterExtensions,
     private page:Page
   ) { }
@@ -40,8 +44,7 @@ export class GoogleMapComponent {
     this._mapService.resolveLocation().subscribe(
     location => {
       this.location = location;
-      console.log('latitude: ' + location.latitude + ' longitude: ' + location.longitude);
-      this.setMapToCurrentLocationAndroid();
+      this.setMapToCurrentLocation();
       this.requestPostsForMap(); 
     },
     error => {
@@ -52,41 +55,62 @@ export class GoogleMapComponent {
   private requestPostsForMap(){
     this._mapService.getUsersAround(this.location.latitude, this.location.longitude).subscribe(loadedPosts => {
       loadedPosts.forEach((post) => {
-        this.setMarkerOnMap(post.caption, post.location.latitude, post.location.longitude, post.user.first_name, post.user.user_name, 'blue', post.image);
+        this.setMarkerOnMap(post);
         this.posts.unshift(post);
-        console.log(JSON.stringify(post));
       });
     }, error => alert('Unable to get friends'));
   }
 
 
-  private setMapToCurrentLocationAndroid(){
+  private setMapToCurrentLocation(){
     this.mapAPIObject.latitude = this.location.latitude;
     this.mapAPIObject.longitude = this.location.longitude;
-    this.mapAPIObject.zoom = 5;
-    this.setMarkerOnMap('', this.location.latitude, this.location.longitude, 'User', 'Current User', 'green', 'noUrl');
+    this.mapAPIObject.zoom = 14;
+    this.setUserMarker(this.location);
   }
 
-  private setMarkerOnMap(caption, latitude, longitude, title, snippet, color, url){
+  private setMarkerOnMap(post: Post){
     let marker = new mapsModule.Marker();
-    marker.position = mapsModule.Position.positionFromLatLng(latitude, longitude);
-    marker.title = title;
-    marker.snippet = snippet;
+    let mapPostIcon = new ImageModule.Image();
+    mapPostIcon.imageSource = ImageSourceModule.fromResource("cameragray");
+    marker.position = mapsModule.Position
+      .positionFromLatLng(post.location.latitude, post.location.longitude);
+    marker.title = post.user.first_name;
+    marker.snippet = post.user.last_name;
+    marker.userData = post;
+    marker.icon = mapPostIcon;
+    this.mapAPIObject.addMarker(marker);
+  }
 
-    //marker.icon = new Color(color);
-    marker.userData = {
-      url : url,
-      caption: caption
-    };
+  private setUserMarker(location){
+    let marker = new mapsModule.Marker();
+    let mapUserIcon = new ImageModule.Image();
+    mapUserIcon.imageSource = ImageSourceModule.fromResource("target");
+    marker.position = mapsModule.Position
+      .positionFromLatLng(location.latitude, location.longitude);
+    marker.title = 'Current';
+    marker.snippet = 'User';
+    marker.userData = undefined;
+    marker.icon = mapUserIcon;
     this.mapAPIObject.addMarker(marker);
   }
 
   onMarkerSelect = (event) => {
-    let url:string = event.marker.userData.url;
-    let caption:string = event.marker.userData.caption || '';
+    if(!event.marker.userData){return;}
+    let post:Post = event.marker.userData;
+    let replyPostData = {
+      postType:'reply',
+      userId:post.user.id,
+      postId:post.id,
+      liked:post.liked
+    }
+    this._postService.postDataToSend = replyPostData;
+    let url:string = post.image;
+    let caption:string = post.caption || '';
     url = url.replace(/\//g, "slashy");
     caption = caption.replace(/\//g, "slashy");
-    if(url != 'noUrl'){
+    if(url){
+      this._imageService.imageUrl = url; 
       this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
     }
   }

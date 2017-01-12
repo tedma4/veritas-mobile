@@ -3,7 +3,7 @@
     <Image id="postImage"></Image>
   </StackLayout>
   <DockLayout left="0" top="0" width="100%" height="100%" class="transparent" stretchLastChild="false" visibility="{{ isImageLoading ? 'collapsed' : 'visible' }}" (tap)="goBack()">
-    <Label *ngIf="displayCaption" dock="top" width="100%" height="auto" class="caption label-caption" [text]="_caption" textAlignment="center">
+    <Label *ngIf="displayCaption" dock="top" width="100%" height="auto" class="caption label-caption" [text]="_caption" textAlignment="center" textWrap="true">
     </Label>
     <DockLayout dock="bottom" height="60" width="100%" class="bar" stretchLastChild="false">
       <StackLayout dock="right" orientation="horizontal" height="100%" width="40%" class="transparent">

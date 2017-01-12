@@ -12,6 +12,8 @@ import { PostUserSelectionComponent } from './pages/post-user-selection/post-use
 import { HomeComponent } from './pages/home/home.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { MemoryFriendSelectorComponent } from './pages/memory-friend-selector/memory-friend-selector.component';
+import { MemoryGalleryComponent } from './pages/memory-gallery/memory-gallery.component';
 
 import { AuthGuard } from "./auth-guard.service";
 
@@ -31,7 +33,9 @@ export const routes = [
   { path: 'post-user-selection', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
-  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]}
+  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]},
+  { path: 'memory-friend-selector', component: MemoryFriendSelectorComponent, canActivate: [AuthGuard]},
+  { path: 'memory-gallery/:friendId', component: MemoryGalleryComponent, canActivate: [AuthGuard]}
 ];
 
 export const navigatableComponents = [
@@ -48,5 +52,7 @@ export const navigatableComponents = [
   PostUserSelectionComponent,
   HomeComponent,
   SettingsComponent,
-  NotificationsComponent
+  NotificationsComponent,
+  MemoryFriendSelectorComponent,
+  MemoryGalleryComponent
 ];

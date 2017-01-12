@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import { Router } from "@angular/router";
 import platformModule = require("platform");
 import {ImageService} from "../../services/images/image.service";
+import {PostService} from "../../services/post/post.service";
 import {MapService} from "../../services/maps/map.service";
 import * as camera from "nativescript-camera";
 import { RouterExtensions } from "nativescript-angular/router";
@@ -20,6 +21,7 @@ export class NavigationBarComponent implements OnInit{
 
   constructor(
     private _imageService: ImageService,
+    private _postService: PostService,
     private routerExtensions: RouterExtensions,
     private _mapService: MapService,
   ) {}
@@ -30,19 +32,6 @@ export class NavigationBarComponent implements OnInit{
     this.navBarSectionWidth = this.screenWidth / 3;
   }
 
-  private getLocation(displayAlert: boolean){
-    this._mapService.resolveLocation().subscribe(
-    location => {
-      this._location = location;
-      console.log('latitude: ' + location.latitude + ' longitude: ' + location.longitude);
-    },
-    error => {
-      if(displayAlert){
-        alert('You must turn on your location');
-      }
-    });
-  }
-
   private takePicture(){
    if(camera.isAvailable()){
       const scaleFactor = screen.mainScreen.scale;
@@ -50,6 +39,10 @@ export class NavigationBarComponent implements OnInit{
       const height = 1920 / scaleFactor;
       camera.takePicture({width: width, height: height, keepAspectRatio: true, saveToGallery: false}).then(imageAsset => {
         this._imageService.temporaryImageAsset = imageAsset;
+        let replyPostData = {
+          postType:'none',
+        }
+        this._postService.postDataToSend = replyPostData;
         this.routerExtensions.navigate(["/post-preview"], { animated: false });
       });
     }else{
