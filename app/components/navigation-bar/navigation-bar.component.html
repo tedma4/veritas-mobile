@@ -1,4 +1,4 @@
-<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/home']" pageTransition="none">
+<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/home']" clearHistory="true" pageTransition="none">
   <Image src="res://home" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
 </StackLayout>
 
@@ -6,6 +6,6 @@
   <Image src="res://camera" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center" (tap)="takePicture()"></Image> 
 </StackLayout>
 
-<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/google-map']" pageTransition="none">
+<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/google-map']" clearHistory="true" pageTransition="none">
   <Image src="res://gps" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
 </StackLayout>

@@ -41,12 +41,13 @@ export class MapService {
   }
 
   private getDeviceLocation(){
-    console.log('location is enabled, getting location');
     let locationConfiguration:any = {};
     if(application.android){
-      locationConfiguration = {desiredAccuracy: 1, minimumUpdateTime:10000, maximumAge:10000, timeout:10000}
+      locationConfiguration =
+        {desiredAccuracy: 1, minimumUpdateTime:10000, maximumAge:10000, timeout:10000}
     }else{
-      locationConfiguration = {desiredAccuracy: 1, minimumUpdateTime:10000, timeout:10000};
+      locationConfiguration =
+        {desiredAccuracy: 1, minimumUpdateTime:10000, timeout:10000};
     }
     return Observable.create(locationObserver => {
       geolocation.getCurrentLocation(locationConfiguration)

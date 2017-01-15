@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild, OnDestroy} from '@angular/core';
 import { RouterExtensions } from "nativescript-angular/router";
 import {MapService} from "../../services/maps/map.service";
 import {ImageService} from "../../services/images/image.service";
@@ -24,7 +24,7 @@ registerElement("MapView", () => mapsModule.MapView);
   templateUrl: 'pages/map/google-map.component.html'
 })
 
-export class GoogleMapComponent {
+export class GoogleMapComponent implements OnDestroy {
   constructor(
     private _mapService: MapService, 
     private _imageService: ImageService, 
@@ -37,10 +37,16 @@ export class GoogleMapComponent {
   private posts = [];
   private currentMapData:any = {};
   private mapAPIObject:any = {};
+  private dataInterval:any
   
   //Map events
   onMapReady = (event) => {
     this.mapAPIObject = event.object;
+    this.initializeMapAndPosts();
+    this.dataInterval = setInterval(() => this.initializeMapAndPosts(), 25000);
+  };
+
+  private initializeMapAndPosts(){
     this._mapService.resolveLocation().subscribe(
     location => {
       this.location = location;
@@ -50,15 +56,21 @@ export class GoogleMapComponent {
     error => {
       alert('You must turn on your location');
     });
-  };
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.dataInterval);
+  }
 
   private requestPostsForMap(){
     this._mapService.getUsersAround(this.location.latitude, this.location.longitude).subscribe(loadedPosts => {
+      this.mapAPIObject.removeAllMarkers();
+      this.setUserMarker(this.location);
       loadedPosts.forEach((post) => {
         this.setMarkerOnMap(post);
         this.posts.unshift(post);
       });
-    }, error => alert('Unable to get friends'));
+    }, error => alert('Unable to get posts on the map'));
   }
 
 
