@@ -2,6 +2,7 @@ import { Component, OnInit} from "@angular/core";
 import { Router} from "@angular/router";
 import {MapService} from "./services/maps/map.service";
 import platform = require("platform");
+import {SessionService} from "./services/sessions/session.service";
 import GMSServiceKey = require('./GMSServiceKey');
 
 @Component({
@@ -11,6 +12,7 @@ import GMSServiceKey = require('./GMSServiceKey');
 export class AppComponent implements OnInit {
   constructor(
     private _mapService: MapService, 
+    private _sessionService: SessionService,
     private router: Router
   ){}
 
@@ -20,23 +22,35 @@ export class AppComponent implements OnInit {
     if(platform.isIOS){
       GMSServiceKey();
     }
-    this.getLocation();
-    this.locationInterval =
-      setInterval(() => this.getLocation(), 30000);
+    this.turnOnLocation();
   }
 
-  private getLocation(){
-    this._mapService.resolveLocation().subscribe(
-    location => {
-      this.location = location;
-      this.sendUserLocation();
-    },
-    error => {
-      console.log(error);
+  private turnOnLocation(){
+    this._mapService.turnOnLocation().subscribe({
+      next: data => {
+        this.startLocationSubscription();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  } 
+
+  private startLocationSubscription(){
+    let userId = this._sessionService.getCurrentSession();
+    if(!userId){ return; }
+    let subscription = this._mapService.getLocationWatch().subscribe({
+      next: (location) => {
+        if(location){
+          this.location = location;
+          this.sendUserLocation();
+        }
+      }
     });
   }
 
   private sendUserLocation(){
+    console.log('sending users location');
     this._mapService.sendUserLocation(this.location).subscribe(
       response => {},
       error => {console.log('Unable to send the location of user');}

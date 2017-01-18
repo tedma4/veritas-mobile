@@ -37,29 +37,29 @@ export class GoogleMapComponent implements OnDestroy {
   private posts = [];
   private currentMapData:any = {};
   private mapAPIObject:any = {};
-  private dataInterval:any
+  private locationSubscription:any;
   
   //Map events
   onMapReady = (event) => {
     this.mapAPIObject = event.object;
     this.initializeMapAndPosts();
-    this.dataInterval = setInterval(() => this.initializeMapAndPosts(), 25000);
   };
 
   private initializeMapAndPosts(){
-    this._mapService.resolveLocation().subscribe(
-    location => {
-      this.location = location;
-      this.setMapToCurrentLocation();
-      this.requestPostsForMap(); 
-    },
-    error => {
-      alert('You must turn on your location');
+    this.locationSubscription = this._mapService.getLocationWatch().subscribe({
+      next: (location) => {
+        if(location){
+          console.log('initializing map');
+          this.location = location;
+          this.setMapToCurrentLocation();
+          this.requestPostsForMap(); 
+        }
+      }
     });
   }
 
   ngOnDestroy() {
-    clearInterval(this.dataInterval);
+    this.locationSubscription.unsubscribe();
   }
 
   private requestPostsForMap(){
@@ -122,7 +122,8 @@ export class GoogleMapComponent implements OnDestroy {
     url = url.replace(/\//g, "slashy");
     caption = caption.replace(/\//g, "slashy");
     if(url){
-      this._imageService.imageUrl = url; 
+      this._imageService.imageUrl = url;
+      this.locationSubscription.unsubscribe();
       this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
     }
   }
