@@ -3,6 +3,7 @@ import { RouterExtensions } from "nativescript-angular/router";
 import {MapService} from "../../services/maps/map.service";
 import {ImageService} from "../../services/images/image.service";
 import {PostService} from "../../services/post/post.service";
+import {SessionService} from "../../services/sessions/session.service";
 import { NavigationBarComponent } from '../../components/navigation-bar/navigation-bar.component';
 var mapsModule = require("nativescript-google-maps-sdk");
 import {Color} from "color";
@@ -29,6 +30,7 @@ export class GoogleMapComponent implements OnDestroy {
     private _mapService: MapService, 
     private _imageService: ImageService, 
     private _postService: PostService,
+    private _sessionService: SessionService,
     private routerExtensions: RouterExtensions,
     private page:Page
   ) { }
@@ -46,7 +48,7 @@ export class GoogleMapComponent implements OnDestroy {
   };
 
   private initializeMapAndPosts(){
-    this.locationSubscription = this._mapService.getLocationWatch().subscribe({
+    this.locationSubscription = this._mapService.getLocationBehaviorSubject().subscribe({
       next: (location) => {
         if(location){
           console.log('initializing map');
@@ -63,7 +65,9 @@ export class GoogleMapComponent implements OnDestroy {
   }
 
   private requestPostsForMap(){
-    this._mapService.getUsersAround(this.location.latitude, this.location.longitude).subscribe(loadedPosts => {
+    let userId = this._sessionService.getCurrentSession().user.id;
+    this._mapService.getUsersAround(this.location.latitude,
+      this.location.longitude, userId).subscribe(loadedPosts => {
       this.mapAPIObject.removeAllMarkers();
       this.setUserMarker(this.location);
       loadedPosts.forEach((post) => {

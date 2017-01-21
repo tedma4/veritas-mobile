@@ -18,10 +18,10 @@ export class LandingComponent implements OnInit{
 
   public logOut(){
     this._sessionService.logOut();
-    this.routerExtensions.navigate(["/welcome"], { animated: false });
+    this.routerExtensions.navigate(["/welcome"], {animated: false, clearHistory: true});
   }
 
   public openSettings(){
-    this.routerExtensions.navigate(["/settings"], { animated: false });
+    this.routerExtensions.navigate(["/settings"], {animated: false});
   }
 }

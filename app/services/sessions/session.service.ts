@@ -3,6 +3,7 @@ import {Http, Headers, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Session} from "../../models/session";
 import {User} from  "../../models/user";
+import {MapService} from "../../services/maps/map.service";
 var appSettings = require("application-settings");
 var config = require("../../shared/config");
 
@@ -10,7 +11,12 @@ var config = require("../../shared/config");
 export class SessionService {
   private _currentSession:Session;
   private _currentPin:string;
-  constructor(private _http: Http) {}
+  private _locationSubscription:any;
+
+  constructor(
+    private _http: Http,
+    private _mapService: MapService
+  ) {}
 
   public logIn(email:string, password:string) {
     let headers = new Headers();
@@ -29,6 +35,7 @@ export class SessionService {
     .map(res => res.json())
     .map(data => {
       this.saveSession(data);
+      this.startLocationWatch();
       return data;
     })
     .catch(this.handleErrors);
@@ -91,8 +98,46 @@ export class SessionService {
 	}
   
   public logOut(){
+    this._mapService.stopLocationWatch();
     this._currentSession = undefined;
     appSettings.remove("sessionData");
+  }
+
+  public turnOnLocation(){
+    this._mapService.turnOnLocation().subscribe({
+      next: data => {
+        this.startLocationSubscription();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  } 
+
+  public startLocationWatch(){
+    if(this._currentSession){
+      this._mapService.startLocationWatch();
+      console.log('location watch has started');
+    }
+  }
+
+  public startLocationSubscription(){
+    this._locationSubscription = this._mapService.getLocationBehaviorSubject().subscribe({
+      next: (location) => {
+        if(location){
+          this.sendUserLocation(location);
+        }
+      }
+    });
+  }
+
+  private sendUserLocation(location){
+    console.log('sending users location');
+    this._mapService.sendUserLocation(location,
+      this._currentSession.user.id).subscribe(
+      response => {},
+      error => {console.log('Unable to send the location of user');}
+    );
   }
 
   private handleError(error: any) {

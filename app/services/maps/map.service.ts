@@ -4,16 +4,15 @@ import geolocation = require("nativescript-geolocation");
 import application = require("application");
 import {Observable} from "rxjs/Rx";
 import {BehaviorSubject} from "rxjs";
-import {SessionService} from "../../services/sessions/session.service";
 var config = require("../../shared/config");
 
 @Injectable()
 export class MapService {
   constructor(
     private _http: Http,
-    private _sessionService: SessionService,
   ) {}
   private locationWatchId:any;
+  private behaviorSubject = new BehaviorSubject(undefined);
 
   public resolveLocation(){
     return Observable.create(resolveObserver => {
@@ -69,8 +68,7 @@ export class MapService {
     });
   }
 
-  private behaviorSubject = new BehaviorSubject(undefined);
-  public getLocationWatch(){
+  public startLocationWatch(){
     if(!this.locationWatchId){
       this.locationWatchId = geolocation.watchLocation(location => {
         if (location) {
@@ -80,7 +78,16 @@ export class MapService {
         console.log("Error: " + e.message);
       }, this.getLocationConfiguration(true));
     }
+  }
+
+  public getLocationBehaviorSubject(){
     return this.behaviorSubject;
+  }
+
+  public stopLocationWatch(){
+    geolocation.clearWatch(this.locationWatchId);
+    this.locationWatchId = undefined;
+    this.behaviorSubject.next(undefined);
   }
 
   public turnOnLocation(){
@@ -97,8 +104,7 @@ export class MapService {
     });
   }
 
-  public getUsersAround(latitude, longitude) {
-    let userId = this._sessionService.getCurrentSession().user.id;
+  public getUsersAround(latitude, longitude, userId) {
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -116,8 +122,7 @@ export class MapService {
     .catch(this.handleErrors);
   }
 
-  public sendUserLocation(location){
-    let userId = this._sessionService.getCurrentSession().user.id;
+  public sendUserLocation(location, userId){
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
     let payload = {
