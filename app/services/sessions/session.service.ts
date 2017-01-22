@@ -107,6 +107,9 @@ export class SessionService {
     this._mapService.turnOnLocation().subscribe({
       next: data => {
         this.startLocationSubscription();
+        if(this.getCurrentSession()){
+          this.startLocationWatch();
+        }
       },
       error: err => {
         console.log(err);
