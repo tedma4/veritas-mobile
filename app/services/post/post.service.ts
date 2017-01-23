@@ -7,12 +7,13 @@ import imageSourceModule = require("image-source");
 import {SessionService} from "../../services/sessions/session.service";
 import {Session} from "../../models/session";
 import {User} from "../../models/user";
+import {PostToSend} from "../../models/post-to-send";
 var config = require("../../shared/config");
 
 @Injectable()
 export class PostService {
   private _imageUrl:string;
-  private _postDataToSend:any;
+  private _postToSend:PostToSend;
   private _currentSession:Session;
 
   constructor(
@@ -22,12 +23,12 @@ export class PostService {
     private _sessionService: SessionService
   ) {}
 
-	public get postDataToSend(): any {
-		return this._postDataToSend;
+	public get postToSend(): PostToSend {
+		return this._postToSend;
 	}
 
-	public set postDataToSend(value: any) {
-		this._postDataToSend = value;
+	public set postToSend(value: PostToSend) {
+		this._postToSend = value;
 	}
 
   public likePost(postId){

@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {RouterExtensions} from "nativescript-angular/router";
 import {ImageService} from "../../services/images/image.service";
 import {PostService} from "../../services/post/post.service";
+import {PostToSend} from "../../models/post-to-send";
 import {SessionService} from "../../services/sessions/session.service";
 import {Page} from "ui/page";
 import {Color} from "color";
@@ -18,7 +19,7 @@ import enumsModule = require('ui/enums');
 })
 export class PostPreviewComponent implements OnInit{
   private imageAsset:any = {};
-  private postDataToSend:any = {};
+  private postToSend:PostToSend;
   private previewImage:any;
   private caption:string = '';
   public screenWidth:number;
@@ -33,7 +34,7 @@ export class PostPreviewComponent implements OnInit{
   ) {}
 
   ngOnInit() {
-    this.postDataToSend = this._postService.postDataToSend;
+    this.postToSend = this._postService.postToSend;
     this.screenWidth = platformModule.screen.mainScreen.widthDIPs;
     this.postBarSectionWidth = this.screenWidth / 3;
 
@@ -71,33 +72,33 @@ export class PostPreviewComponent implements OnInit{
     }, 500);
   }
 
-  private postAndReturnHome(postDataToSend){
-    this._postService.processPost(postDataToSend).subscribe(respose => {
+  private postAndReturnHome(postToSend:PostToSend){
+    this._postService.processPost(postToSend).subscribe(respose => {
     }, error => {
       alert(error);
     });
-    this._postService.postDataToSend = {};
+    this._postService.postToSend =  new PostToSend({});
     this.routerExtensions.navigate(["/home"], { animated: false, clearHistory: true });
   }
 
   public makePublicPost(){
-    this.postDataToSend.caption = this.caption;
-    this.postDataToSend.friendIds = [];
-    this.postDataToSend.postType = 'public';
-    this.postAndReturnHome(this.postDataToSend);
+    this.postToSend.newPost.caption = this.caption;
+    this.postToSend.userList = [];
+    this.postToSend.newPost.post_type = 'public';
+    this.postAndReturnHome(this.postToSend);
   }
 
   public makeReplyPost(){
-    this.postDataToSend.caption = this.caption;
-    this.postDataToSend.friendIds = [];
-    this.postDataToSend.postType = 'reply';
-    this.postAndReturnHome(this.postDataToSend);
+    this.postToSend.newPost.caption = this.caption;
+    this.postToSend.userList = [];
+    this.postToSend.newPost.post_type = 'reply';
+    this.postAndReturnHome(this.postToSend);
   }
 
   makeNonPublicPost(postType:string){
-    this.postDataToSend.caption = this.caption;
-    this.postDataToSend.postType = postType;
-    this._postService.postDataToSend = this.postDataToSend;
+    this.postToSend.newPost.caption = this.caption;
+    this.postToSend.newPost.post_type = postType;
+    this._postService.postToSend = this.postToSend;
     this.routerExtensions.navigate(["/post-user-selection/"], {animated: false});
   }
 

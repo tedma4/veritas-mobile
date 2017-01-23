@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild, ElementRef} from "@angular/core";
-import {RouterExtensions, PageRoute} from "nativescript-angular/router";
+import {RouterExtensions} from "nativescript-angular/router";
 import {ImageService} from "../../services/images/image.service";
 import {PostService} from "../../services/post/post.service";
+import {PostToSend} from "../../models/post-to-send";
 import {Page} from "ui/page";
 import {Color} from "color";
 import platformModule = require("platform");
@@ -21,31 +22,19 @@ export class PostComponent implements OnInit{
   public displayCaption: boolean = false;
   public screenWidth:number;
   public screenHeight:number;
-  public _caption:string = '';
-  private _imageUrl:string = '';
   private postImage:any;
   private absoluteContainer:any;
-  private postDataToSend:any = {};
+  private postToSend:PostToSend;
 
   constructor(
     private routerExtensions: RouterExtensions,
     private _imageService: ImageService,
     private _postService: PostService,
-    private pageRoute: PageRoute,
     private page: Page
-  ) {
-    this.pageRoute.activatedRoute
-    .switchMap(activatedRoute => activatedRoute.params)
-    .forEach((params) => {
-      this._imageUrl = params['imageUrl'];
-      this._caption = params['caption'] || '';
-      this._imageUrl = this._imageUrl.replace(/slashy/g, "/");
-      this._caption = this._caption.replace(/slashy/g, "/");
-    });
-  }
+  ) {}
 
   ngOnInit() {
-    this.postDataToSend = this._postService.postDataToSend;
+    this.postToSend = this._postService.postToSend;
     camera.requestPermissions();
     this.page.actionBarHidden = true;
     this.page.backgroundColor = new Color('#333333');
@@ -56,14 +45,14 @@ export class PostComponent implements OnInit{
 
   private loadPicture(){
     this.isImageLoading = true;
-    imageSource.fromUrl(this._imageUrl)
+    imageSource.fromUrl(this.postToSend.originPost.image)
     .then(res => {
       this.isImageLoading = false;
       this.postImage = this.page.getViewById('postImage') as imageModule.Image;
       this.postImage.stretch = enumsModule.Stretch.aspectFill;
       this.postImage.imageSource = res;
       this.postImage.backgroundColor = new Color('white');
-      if(this._caption.length > 0){
+      if(this.postToSend.originPost.caption.length > 0){
         this.displayCaption = true;
       }
       this.checkPostLiked();
@@ -88,20 +77,20 @@ export class PostComponent implements OnInit{
   }
 
   private checkPostLiked(){
-    if(this.postDataToSend.liked){
+    if(this.postToSend.originPost.liked){
       let likeImage = this.page.getViewById('likeImage') as imageModule.Image;
       likeImage.imageSource = imageSource.fromResource("heart");
     }
   }
 
   public likePost(){
-    if(this.postDataToSend.liked){return;}
-    this._postService.likePost(this.postDataToSend.postId).subscribe(data => {
+    if(this.postToSend.originPost.liked){return;}
+    this._postService.likePost(this.postToSend.originPost.id).subscribe(data => {
     }, error => {
     });
     let likeImage = this.page.getViewById('likeImage') as imageModule.Image;
     likeImage.imageSource = imageSource.fromResource("heart");
-    this.postDataToSend.liked = true;
+    this.postToSend.originPost.liked = true;
   }
 
   public goBack():void{

@@ -43,9 +43,8 @@ export class MapService {
 
   private getLocationConfiguration(isWatch):any{
     if(application.android){
-      if(isWatch){
+      if(isWatch)
         return {desiredAccuracy: 1, minimumUpdateTime:20000, maximumAge:10000};
-      }
       else
         return {desiredAccuracy: 1, minimumUpdateTime:10000, maximumAge:10000, timeout:10000};
     }else{

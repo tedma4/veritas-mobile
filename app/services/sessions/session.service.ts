@@ -21,7 +21,6 @@ export class SessionService {
   public logIn(email:string, password:string) {
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
-
     return this._http.post(
       config.apiUrl + "/v1/sessions",
       JSON.stringify({
@@ -44,7 +43,6 @@ export class SessionService {
   public signUp(form){
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
-
     return this._http.post(
       config.apiUrl + "/v1/users",
       JSON.stringify({
@@ -63,7 +61,8 @@ export class SessionService {
   public verifyPin(form){
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/check_pin?pin=" + form.pin, { headers: headers })
+    return this._http.get(config.apiUrl + "/v1/check_pin?pin=" +
+      form.pin, { headers: headers })
     .map(res => res.json())
     .map(data => {
       return data;
@@ -120,7 +119,6 @@ export class SessionService {
   public startLocationWatch(){
     if(this._currentSession){
       this._mapService.startLocationWatch();
-      console.log('location watch has started');
     }
   }
 
@@ -135,7 +133,6 @@ export class SessionService {
   }
 
   private sendUserLocation(location){
-    console.log('sending users location');
     this._mapService.sendUserLocation(location,
       this._currentSession.user.id).subscribe(
       response => {},
