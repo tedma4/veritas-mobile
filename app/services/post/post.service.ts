@@ -1,26 +1,24 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response} from "@angular/http";
+import {URLSearchParams, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {ImageService} from "../../services/images/image.service";
 import {MapService} from "../../services/maps/map.service"; 
 import imageSourceModule = require("image-source");
-import {SessionService} from "../../services/sessions/session.service";
-import {Session} from "../../models/session";
+import {HttpInterceptorService} from "../http-interceptor/http-interceptor.service";
 import {User} from "../../models/user";
 import {PostToSend} from "../../models/post-to-send";
+import {Location} from "../../models/location";
 var config = require("../../shared/config");
 
 @Injectable()
 export class PostService {
   private _imageUrl:string;
   private _postToSend:PostToSend;
-  private _currentSession:Session;
 
   constructor(
     private _mapService: MapService,
     private _imageService: ImageService,
-    private _http: Http,
-    private _sessionService: SessionService
+    private _httpInterceptorService: HttpInterceptorService
   ) {}
 
 	public get postToSend(): PostToSend {
@@ -31,25 +29,20 @@ export class PostService {
 		this._postToSend = value;
 	}
 
-  public likePost(postId){
-    this._currentSession = this._sessionService.getCurrentSession();
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
+  public likePost(postId:string){
+    let body:any = {
+      post_id: postId
+    };
     let url = config.apiUrl + "/v1/like";
-    url = url.concat('?user_id=' + this._currentSession.user.id + '&');
-    url = url.concat('post_id=' + postId);
-    return this._http.post(
-      url, {}, { headers: headers }
-    )
+    return this._httpInterceptorService.post(url, body)
     .map(res => res.json())
     .catch(this.handleErrors);
   }
 
   public getMemoryFriendList(){
-    this._currentSession = this._sessionService.getCurrentSession();
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/memories?user_id=" + this._currentSession.user.id, { headers: headers })
+    let params: URLSearchParams = new URLSearchParams();
+    let url = config.apiUrl + "/v1/memories";
+    return this._httpInterceptorService.get(url, params)
     .map(res => res.json())
     .map(data => {
       let userList = [];
@@ -61,16 +54,17 @@ export class PostService {
     .catch(this.handleErrors);
   }
 
-  public processPost(postData){
+  public processPost(postData:PostToSend){
     return Observable.create(processPostObserver => {
       this.getImageStringFromAsset().subscribe({
         next: data => {
-          postData.imageData = data;
-          postData.location = {};
+          postData.newPost.image = data;
+          let location = new Location({}); 
           this._mapService.resolveLocation().subscribe(
           locationResponse => {
-            postData.location = locationResponse;
-            console.log('latitude: ' + postData.location.latitude + ' longitude: ' + postData.location.longitude);
+            location.latitude = locationResponse.latitude;
+            location.longitude = locationResponse.longitude;
+            postData.newPost.location = location;
             this.submitPost(postData).subscribe(
             data => {
               processPostObserver.next(data);
@@ -80,13 +74,6 @@ export class PostService {
             });
           },error => {
             alert('You must turn on your location');
-            this.submitPost(postData).subscribe(
-            data => {
-              processPostObserver.next(data);
-              processPostObserver.complete();
-            }, error => {
-              processPostObserver.error(error); 
-            });
           });
         }
       });
@@ -106,7 +93,7 @@ export class PostService {
     });
   } 
 
-  private submitPost(postData){
+  private submitPost(postData:PostToSend){
     return Observable.create(postObserver => {
       this._imageService.uploadImage(postData).subscribe(data => {
         postObserver.next(data);

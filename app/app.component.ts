@@ -15,8 +15,6 @@ export class AppComponent implements OnInit {
     private router: Router
   ){}
 
-  private location:any = {};
-  private locationInterval:any;
   ngOnInit() {
     if(platform.isIOS){
       GMSServiceKey();

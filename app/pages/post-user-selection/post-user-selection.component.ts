@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {RouterExtensions} from "nativescript-angular/router";
 import {UserService} from "../../services/users/user.service";
 import {PostService} from "../../services/post/post.service";
+import {PostToSend} from "../../models/post-to-send";
 import imageSource = require("image-source");
 import {Page} from "ui/page";
 import {Color} from "color";
@@ -14,7 +15,7 @@ import {Color} from "color";
 })
 
 export class PostUserSelectionComponent implements OnInit{
-  private postDataToSend:any;
+  private postToSend:PostToSend;
   public isLoadingFriends: boolean = false;
   public _users = [];
 
@@ -37,23 +38,21 @@ export class PostUserSelectionComponent implements OnInit{
       this.isLoadingFriends = false;
       this.goBack();
     });
-    this.postDataToSend = this._postService.postDataToSend;
+    this.postToSend = this._postService.postToSend;
   }
 
   public makePost(){
-    let friendIds = this.getFriendIds();
-    console.log(JSON.stringify(friendIds));
-    if(friendIds.length === 0){
+    let selectedFriends = this.getSelectedFriends();
+    if(selectedFriends.length === 0){
       alert('Select at least one friend');
       return;
     }
-    console.log(JSON.stringify(this.postDataToSend));
-    this.postDataToSend.friendIds = friendIds;
-    this._postService.processPost(this.postDataToSend).subscribe(respose => {
+    this.postToSend.userList = selectedFriends;
+    this._postService.processPost(this.postToSend).subscribe(respose => {
     }, error => {
       alert(error);
     });
-    this._postService.postDataToSend = {};
+    this._postService.postToSend =  new PostToSend({});
     this.routerExtensions.navigate(["/home"], { animated: false, clearHistory: true });
   }
 
@@ -62,10 +61,15 @@ export class PostUserSelectionComponent implements OnInit{
       return user.checked;
     });
     let ids = selectedFriends.map(user => {
-      console.log(user.id);
       return user.id;
     });
     return ids;
+  }
+
+  private getSelectedFriends(){
+    return this._users.filter(user => {
+      return user.checked;
+    });
   }
 
   public goBack():void{

@@ -28,14 +28,14 @@ export class Post{
 	  this._image = object && object.image || object && object._image || undefined;
 		if(object.location){
 			this._location = new Location(object.location);	
-		}else{
+		}else if(object._location){
 			this._location = new Location(object._location);
 		}
 		this._caption = object && object.caption || object && object._caption || undefined;
 	  this._post_type = object && object.post_type || object && object._post_type || undefined;
 		if(object.user){
 			this._user = new User(object.user);	
-		}else{
+		}else if(object._user){
 			this._user = new User(object._user);
 		}
 	  this._liked = object && object.liked || object && object._liked || undefined;

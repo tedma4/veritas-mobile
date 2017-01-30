@@ -15,12 +15,12 @@ export class PostToSend{
   constructor(object: any){
 		if(object.originPost){
 			this._originPost = new Post(object.originPost);	
-		}else{
+		}else if(object._originPost){
 			this._originPost = new Post(object._originPost);
 		}
 		if(object.newPost){
 			this._newPost = new Post(object.newPost);	
-		}else{
+		}else if(object._newPost){
 			this._newPost = new Post(object._newPost);
 		}
 	  this._userList = object && object.userList || object && object._userList || undefined;

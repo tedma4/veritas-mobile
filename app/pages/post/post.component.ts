@@ -52,7 +52,7 @@ export class PostComponent implements OnInit{
       this.postImage.stretch = enumsModule.Stretch.aspectFill;
       this.postImage.imageSource = res;
       this.postImage.backgroundColor = new Color('white');
-      if(this.postToSend.originPost.caption.length > 0){
+      if(this.postToSend.originPost.caption){
         this.displayCaption = true;
       }
       this.checkPostLiked();

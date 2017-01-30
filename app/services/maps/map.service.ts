@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response, URLSearchParams} from "@angular/http";
+import {URLSearchParams, Response} from "@angular/http";
+import {HttpInterceptorService} from "../http-interceptor/http-interceptor.service";
 import geolocation = require("nativescript-geolocation");
 import application = require("application");
 import {Observable} from "rxjs/Rx";
@@ -9,7 +10,7 @@ var config = require("../../shared/config");
 @Injectable()
 export class MapService {
   constructor(
-    private _http: Http,
+    private _httpInterceptorService: HttpInterceptorService
   ) {}
   private locationWatchId:any;
   private behaviorSubject = new BehaviorSubject(undefined);
@@ -103,17 +104,23 @@ export class MapService {
     });
   }
 
-  public getUsersAround(latitude, longitude, userId) {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
+  public getUsersAround(latitude, longitude) {
     let params: URLSearchParams = new URLSearchParams();
-    params.set('user_id', userId);
     params.set('location', longitude + "," + latitude);
     params.set('time_stamp', new Date().toJSON());
+    let url:string = config.apiUrl + "/v1/map";
+    return this._httpInterceptorService.get(url, params)
+    .map(res => res.json()).map(data => {return data;})
+    .catch(this.handleErrors);
+  }
 
-    return this._http.get(config.apiUrl + "/v1/map",
-    {headers: headers, search: params})
+  public sendUserLocation(location){
+    let body:any = {
+      location: location.longitude + "," + location.latitude,
+      time_stamp: new Date().toJSON(),
+    };
+    let url:string = config.apiUrl + "/v1/user_location";
+    return this._httpInterceptorService.post(url, body)
     .map(res => res.json())
     .map(data => {
       return data;
@@ -121,22 +128,8 @@ export class MapService {
     .catch(this.handleErrors);
   }
 
-  public sendUserLocation(location, userId){
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    let payload = {
-      user_id: userId,
-      location: location.longitude + "," + location.latitude,
-      time_stamp: new Date(),
-    };
-    return this._http.post(config.apiUrl + "/v1/user_location",
-    JSON.stringify(payload),
-    {headers: headers})
-    .map(res => res.json())
-    .map(data => {
-      return data;
-    })
-    .catch(this.handleErrors);
+  public getLocationDistance(location1:any, location2:any){
+    return geolocation.distance(location1, location2); 
   }
 
   private handleErrors(error: Response) {

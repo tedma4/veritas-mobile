@@ -78,8 +78,9 @@ export class HomeComponent implements OnInit{
   public onPostSelect(post:Post){
     let postToSend = new PostToSend({});
     let replyPost = new Post({});
+    replyPost.post_type = 'reply';
     postToSend.originPost = post;
-    postToSend.newPost.post_type = 'reply';
+    postToSend.newPost = replyPost;
     this._postService.postToSend = postToSend;
     this.routerExtensions.navigate(["/post"], { animated: false });
   }

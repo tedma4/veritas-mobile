@@ -20,7 +20,7 @@ export class Notification{
 	  this._notice_type = object && object.notice_type || object && object._notice_type || undefined;
 		if(object.user){
 			this._user = new User(object.user);	
-		}else{
+		}else if(object._user){
 			this._user = new User(object._user);
 		}
 	}
