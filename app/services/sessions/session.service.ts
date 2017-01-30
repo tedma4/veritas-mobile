@@ -102,6 +102,8 @@ export class SessionService {
       next: data => {
         this.startLocationSubscription();
         if(this.getCurrentSession()){
+          this._httpInterceptorService.jwt =
+            this._currentSession.auth_token;
           this.startLocationWatch();
         }
       },
