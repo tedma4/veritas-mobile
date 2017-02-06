@@ -5,6 +5,7 @@ import {Observable} from "rxjs/Rx";
 import {Image} from "../../models/image";
 import {Session} from "../../models/session";
 import {Post} from "../../models/post";
+import {User} from "../../models/user";
 import {PostToSend} from "../../models/post-to-send";
 var config = require("../../shared/config");
 
@@ -25,20 +26,22 @@ export class ImageService {
         attachment:postData.newPost.image
       },
       location:[postData.newPost.location.longitude, postData.newPost.location.latitude],
-      selected_users: () => {
-        return postData.userList.map(user => {
-          return user.id;
-        });
-      }
+      selected_users: this.getUserIdsFromUsers(postData.userList)
     };
     if(postData.newPost.post_type === 'reply'){
       payload.user_replying_to = postData.originPost.user.id;
       payload.post_replying_to = postData.originPost.id;
     }
-    console.log(JSON.stringify(payload));
     return this._httpInterceptorService.post(url, payload)
     .map(res => res.json())
     .catch(this.handleErrors);
+  }
+
+  private getUserIdsFromUsers(users: Array<User>){
+    if(!users || users.length === 0) {return [];}
+    return users.map(user => {
+      return user.id;
+    });
   }
 
   public getAllImages(){
