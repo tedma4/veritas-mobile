@@ -1,22 +1,20 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
-import {SessionService} from "../../services/sessions/session.service";
+import {URLSearchParams, Response} from "@angular/http";
 import {Notification} from "../../models/notification";
+import {HttpInterceptorService} from "../http-interceptor/http-interceptor.service";
 var config = require("../../shared/config");
 
 @Injectable()
 export class NotificationsService {
   constructor(
-    private _http: Http,
-    private _sessionService: SessionService
+    private _httpInterceptorService: HttpInterceptorService
   ) {}
 
   public getUserNotifications() {
-    let userId = this._sessionService.getCurrentSession().user.id;
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/notifications?user_id=" + userId, { headers: headers })
+    let params: URLSearchParams = new URLSearchParams();
+    let url:string = config.apiUrl + "/v1/notifications";
+    return this._httpInterceptorService.get(url, params)
     .map(res => res.json())
     .map(data => {
       return data;
@@ -24,19 +22,13 @@ export class NotificationsService {
     .catch(this.handleErrors);
   }
 
-  processFriendRequest(notification: Notification, type){
-    let userId = this._sessionService.getCurrentSession().user.id;
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.post(
-      config.apiUrl + "/v1/" + type,
-      JSON.stringify({
-        user_id: userId,
-        friend_id: notification.user.id,
-        notification_id: notification.id
-      }),
-      { headers: headers }
-    )
+  public processFriendRequest(notification: Notification, type){
+    let url:string = config.apiUrl + "/v1/" + type;
+    let body:any = {
+      friend_id: notification.user.id,
+      notification_id: notification.id
+    }
+    return this._httpInterceptorService.post(url, body)
     .map(res => res.json())
     .map(data => {
       return data;
@@ -44,18 +36,10 @@ export class NotificationsService {
     .catch(this.handleErrors);
   }
 
-  unfriendUser(friendId: String){
-    let userId = this._sessionService.getCurrentSession().user.id;
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.post(
-      config.apiUrl + '/v1/remove_friend',
-      JSON.stringify({
-        user_id: userId,
-        friend_id: friendId
-      }),
-      { headers: headers }
-    )
+  public unfriendUser(friendId: String){
+    let url:string = config.apiUrl + '/v1/remove_friend';
+    let body:any = {friend_id: friendId};
+    return this._httpInterceptorService.post(url, body)
     .map(res => res.json())
     .map(data => {
       return data;

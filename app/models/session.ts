@@ -14,7 +14,7 @@ export class Session{
 	  this._auth_token = object && object.auth_token || object && object._auth_token || undefined;
 		if(object.user){
 			this._user = new User(object.user);	
-		}else{
+		}else if(object._user){
 			this._user = new User(object._user);
 		}
 	  this._created_at = object && object.created_at || object && object._created_at || undefined;

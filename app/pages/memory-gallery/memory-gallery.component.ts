@@ -3,6 +3,7 @@ import { RouterExtensions, PageRoute} from "nativescript-angular/router";
 import {ImageService} from "../../services/images/image.service";
 import {PostService} from "../../services/post/post.service";
 import {Post} from "../../models/post";
+import {PostToSend} from "../../models/post-to-send";
 import {User} from "../../models/user";
 import imageModule = require("ui/image");
 import enumsModule = require('ui/enums');
@@ -70,21 +71,13 @@ export class MemoryGalleryComponent implements OnInit{
   }
   
   public onMemorySelect(memory:Post){
-    let replyPostData = {
-      postType:'reply',
-      userId:memory.user.id,
-      postId:memory.id,
-      liked:memory.liked
-    }
-    this._postService.postDataToSend = replyPostData;
-    let url:string = memory.image;
-    let caption:string = memory.caption || '';
-    url = url.replace(/\//g, "slashy");
-    caption = caption.replace(/\//g, "slashy");
-    if(url){
-      this._imageService.imageUrl = url; 
-      this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
-    }
+    let postToSend = new PostToSend({});
+    let replyPost = new Post({});
+    replyPost.post_type = 'reply';
+    postToSend.originPost = memory;
+    postToSend.newPost = replyPost;
+    this._postService.postToSend = postToSend;
+    this.routerExtensions.navigate(["/post"], { animated: false });
   }
 
   public goBack(){

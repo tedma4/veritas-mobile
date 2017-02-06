@@ -1,52 +1,53 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response} from "@angular/http";
+import {URLSearchParams, Response} from "@angular/http";
+import {HttpInterceptorService} from "../http-interceptor/http-interceptor.service";
 import {Observable} from "rxjs/Rx";
 import {Image} from "../../models/image";
 import {Session} from "../../models/session";
 import {Post} from "../../models/post";
-import {SessionService} from "../../services/sessions/session.service";
+import {User} from "../../models/user";
+import {PostToSend} from "../../models/post-to-send";
 var config = require("../../shared/config");
 
 @Injectable()
 export class ImageService {
   private _temporaryImageAsset: any;
   private _imageUrl:string = ''; 
-  constructor(private _http: Http, private _sessionService: SessionService) {}
-  private _currentSession:Session;
+  constructor(
+    private _httpInterceptorService: HttpInterceptorService
+  ) {}
 
-  uploadImage(postData){
-    this._currentSession = this._sessionService.getCurrentSession();
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
+  public uploadImage(postData: PostToSend){
     let url = config.apiUrl + "/v1/posts";
-    if(postData.postType === 'reply'){
-      url = url.concat('?user_replying_to=' + postData.userId + '&');
-      url = url.concat('post_replying_to=' + postData.postId);
-    }
-    let payload = {
-      user_id: this._currentSession.user.id,
-      post_type: postData.postType,
-      caption: postData.caption,
+    let payload:any = {
+      post_type: postData.newPost.post_type,
+      caption: postData.newPost.caption,
       post:{
-        attachment:postData.imageData
+        attachment:postData.newPost.image
       },
-      location:[postData.location.longitude, postData.location.latitude],
-      selected_users: postData.friendIds
+      location:[postData.newPost.location.longitude, postData.newPost.location.latitude],
+      selected_users: this.getUserIdsFromUsers(postData.userList)
     };
-    return this._http.post(
-      url,
-      JSON.stringify(payload),
-      { headers: headers }
-    )
+    if(postData.newPost.post_type === 'reply'){
+      payload.user_replying_to = postData.originPost.user.id;
+      payload.post_replying_to = postData.originPost.id;
+    }
+    return this._httpInterceptorService.post(url, payload)
     .map(res => res.json())
     .catch(this.handleErrors);
   }
 
-  getAllImages(){
-    this._currentSession = this._sessionService.getCurrentSession();
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/feed?id=" + this._currentSession.user.id, { headers: headers })
+  private getUserIdsFromUsers(users: Array<User>){
+    if(!users || users.length === 0) {return [];}
+    return users.map(user => {
+      return user.id;
+    });
+  }
+
+  public getAllImages(){
+    let params: URLSearchParams = new URLSearchParams();
+    let url:string = config.apiUrl + "/v1/feed";
+    return this._httpInterceptorService.get(url, params)
     .map(res => res.json())
     .map(data => {
       let postList = [];
@@ -58,11 +59,11 @@ export class ImageService {
     .catch(this.handleErrors);
   }
 
-  getMemories(friendId:string){
-    this._currentSession = this._sessionService.getCurrentSession();
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/get_memories?user_id=" + this._currentSession.user.id + "&friend_id=" + friendId, { headers: headers })
+  public getMemories(friendId:string){
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('friend_id', friendId);
+    let url:string = config.apiUrl + "/v1/get_memories";
+    return this._httpInterceptorService.get(url, params)
     .map(res => res.json())
     .map(data => {
       let postList = [];

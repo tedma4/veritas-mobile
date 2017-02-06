@@ -7,7 +7,7 @@ interface PostJSON{
 	image: string;
 	location: Location;
 	caption: string;
-	hidden: boolean;
+	post_type: string;
 	user: User;
 	liked: boolean;
 }
@@ -18,7 +18,7 @@ export class Post{
 	private _image: string;
 	private _location: Location;
 	private _caption:string;
-	private _hidden: boolean;
+	private _post_type: string;
 	private _user: User;
 	private _liked:boolean;
 
@@ -28,14 +28,14 @@ export class Post{
 	  this._image = object && object.image || object && object._image || undefined;
 		if(object.location){
 			this._location = new Location(object.location);	
-		}else{
+		}else if(object._location){
 			this._location = new Location(object._location);
 		}
 		this._caption = object && object.caption || object && object._caption || undefined;
-	  this._hidden = object && object.hidden || object && object._hidden || undefined;
+	  this._post_type = object && object.post_type || object && object._post_type || undefined;
 		if(object.user){
 			this._user = new User(object.user);	
-		}else{
+		}else if(object._user){
 			this._user = new User(object._user);
 		}
 	  this._liked = object && object.liked || object && object._liked || undefined;
@@ -83,12 +83,12 @@ export class Post{
 		this._caption = value;
 	}
 
-	public get hidden(): boolean {
-		return this._hidden;
+	public get post_type(): string {
+		return this._post_type;
 	}
 
-	public set hidden(value: boolean) {
-		this._hidden = value;
+	public set post_type(value: string) {
+		this._post_type = value;
 	}
 
 	public get user(): User {

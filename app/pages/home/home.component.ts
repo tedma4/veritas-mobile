@@ -4,6 +4,7 @@ import {ImageService} from "../../services/images/image.service";
 import {SessionService} from "../../services/sessions/session.service";
 import {PostService} from "../../services/post/post.service";
 import {Post} from "../../models/post";
+import {PostToSend} from "../../models/post-to-send";
 import imageModule = require("ui/image");
 import enumsModule = require('ui/enums');
 import listViewModule = require('ui/list-view');
@@ -75,20 +76,12 @@ export class HomeComponent implements OnInit{
   }
 
   public onPostSelect(post:Post){
-    let replyPostData = {
-      postType:'reply',
-      userId:post.user.id,
-      postId:post.id,
-      liked:post.liked
-    }
-    this._postService.postDataToSend = replyPostData;
-    let url:string = post.image;
-    let caption:string = post.caption || '';
-    url = url.replace(/\//g, "slashy");
-    caption = caption.replace(/\//g, "slashy");
-    if(url){
-      this._imageService.imageUrl = url; 
-      this.routerExtensions.navigate(["/post/" + url + "/" + caption], { animated: false });
-    }
+    let postToSend = new PostToSend({});
+    let replyPost = new Post({});
+    replyPost.post_type = 'reply';
+    postToSend.originPost = post;
+    postToSend.newPost = replyPost;
+    this._postService.postToSend = postToSend;
+    this.routerExtensions.navigate(["/post"], { animated: false });
   }
 }

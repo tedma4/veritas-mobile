@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response} from "@angular/http";
+import {URLSearchParams, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Session} from "../../models/session";
 import {User} from  "../../models/user";
 import {MapService} from "../../services/maps/map.service";
+import {HttpInterceptorService} from "../http-interceptor/http-interceptor.service";
 var appSettings = require("application-settings");
 var config = require("../../shared/config");
 
@@ -14,44 +15,32 @@ export class SessionService {
   private _locationSubscription:any;
 
   constructor(
-    private _http: Http,
+    private _httpInterceptorService: HttpInterceptorService,
     private _mapService: MapService
   ) {}
 
   public logIn(email:string, password:string) {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this._http.post(
-      config.apiUrl + "/v1/sessions",
-      JSON.stringify({
-        user:{
-          email:email,
-          password:password
-        },
-      }),
-      { headers: headers }
-    )
+    let url: string = config.apiUrl + "/v1/sessions";
+    let body:any = {user:{
+      email:email,
+      password:password
+    }};
+    return this._httpInterceptorService.post(url, body)
     .map(res => res.json())
     .map(data => {
       this.saveSession(data);
       this.startLocationWatch();
+      this._httpInterceptorService.jwt =
+        this._currentSession.auth_token;
       return data;
     })
     .catch(this.handleErrors);
   }
 
   public signUp(form){
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this._http.post(
-      config.apiUrl + "/v1/users",
-      JSON.stringify({
-        user:form
-      }),
-      { headers: headers }
-    )
+    let url:string = config.apiUrl + "/v1/users";
+    let body:any = {user:form};
+    return this._httpInterceptorService.post(url, body)
     .toPromise() 
     .then(res => {
       this.saveSession(res.json());
@@ -61,9 +50,10 @@ export class SessionService {
   }
 
   public verifyPin(form){
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    return this._http.get(config.apiUrl + "/v1/check_pin?pin=" + form.pin, { headers: headers })
+    let url:string = config.apiUrl + "/v1/check_pin";
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('pin', form.pin);
+    return this._httpInterceptorService.get(url, params)
     .map(res => res.json())
     .map(data => {
       return data;
@@ -98,8 +88,12 @@ export class SessionService {
 	}
   
   public logOut(){
+    let params: URLSearchParams = new URLSearchParams();
+    let url:string = config.apiUrl + "/v1/sessions";
+    this._httpInterceptorService.delete(url, params);
     this._mapService.stopLocationWatch();
     this._currentSession = undefined;
+    this._httpInterceptorService.jwt = undefined;
     appSettings.remove("sessionData");
   }
 
@@ -108,6 +102,8 @@ export class SessionService {
       next: data => {
         this.startLocationSubscription();
         if(this.getCurrentSession()){
+          this._httpInterceptorService.jwt =
+            this._currentSession.auth_token;
           this.startLocationWatch();
         }
       },
@@ -120,7 +116,6 @@ export class SessionService {
   public startLocationWatch(){
     if(this._currentSession){
       this._mapService.startLocationWatch();
-      console.log('location watch has started');
     }
   }
 
@@ -135,9 +130,7 @@ export class SessionService {
   }
 
   private sendUserLocation(location){
-    console.log('sending users location');
-    this._mapService.sendUserLocation(location,
-      this._currentSession.user.id).subscribe(
+    this._mapService.sendUserLocation(location).subscribe(
       response => {},
       error => {console.log('Unable to send the location of user');}
     );
