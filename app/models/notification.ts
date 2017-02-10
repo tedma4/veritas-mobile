@@ -1,10 +1,12 @@
 import { User } from "../models/user";
+import { Post } from "../models/post";
 
 interface NotificationJSON{
 	id: string;
 	created_at: string;
 	notice_type: string;
 	user: User;
+	post: Post;
 }
 
 export class Notification{
@@ -12,9 +14,9 @@ export class Notification{
 	private _created_at: string;
 	private _notice_type: string;
 	private _user: User;
+	private _post:Post;
 
 	constructor(object:any){
-
 	  this._id = object && object.id || object && object._id || undefined;
 	  this._created_at = object && object.created_at || object && object._created_at || undefined;
 	  this._notice_type = object && object.notice_type || object && object._notice_type || undefined;
@@ -22,6 +24,11 @@ export class Notification{
 			this._user = new User(object.user);	
 		}else if(object._user){
 			this._user = new User(object._user);
+		}
+		if(object.post){
+			this._post = new Post(object.post);	
+		}else if(object._post){
+			this._post = new Post(object._post);
 		}
 	}
 
@@ -55,5 +62,13 @@ export class Notification{
 
 	public set user(value: User) {
 		this._user = value;
+	}
+
+	public get post(): Post {
+		return this._post;
+	}
+
+	public set post(value: Post) {
+		this._post = value;
 	}
 } 

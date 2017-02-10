@@ -1,7 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
 import {NotificationsService} from "../../services/notifications/notifications.service";
+import {PostService} from "../../services/post/post.service";
 import {Notification} from "../../models/notification";
+import {Post} from "../../models/post"
+import {PostToSend} from "../../models/post-to-send"
 import dialogs = require("ui/dialogs");
 import {Page} from "ui/page";
 var frameModule = require("ui/frame");
@@ -26,6 +29,7 @@ export class NotificationsComponent implements OnInit{
   
   constructor(
     private _notificationsService: NotificationsService,
+    private _postService: PostService,
     private routerExtensions: RouterExtensions,
     private page: Page
   ) {}
@@ -48,6 +52,19 @@ export class NotificationsComponent implements OnInit{
         }
       });
     }
+    if(notification.post){
+      this.onPostSelect(notification.post);
+    }
+  }
+
+  private onPostSelect(post:Post){
+    let postToSend = new PostToSend({});
+    let replyPost = new Post({});
+    replyPost.post_type = 'reply';
+    postToSend.originPost = post;
+    postToSend.newPost = replyPost;
+    this._postService.postToSend = postToSend;
+    this.routerExtensions.navigate(["/post"], { animated: false });
   }
 
   private processFriendRequest(notification: Notification, userResponse: String){
@@ -55,7 +72,6 @@ export class NotificationsComponent implements OnInit{
       this.changeUserStatusInUI(notification, userResponse);
     }, error => { alert('Error when processing the request'); });
   }
-
 
   private changeUserStatusInUI(notification: Notification, userResponse: String){
     if(this._notifications && this._notifications.length > 0){
