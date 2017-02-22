@@ -1,6 +1,8 @@
 .thumbnail{
   padding: 2;
   background-color:#ffffff;
+  animation-name: opacity;
+  animation-duration: 0.5;
 }
 
 .wrapper{

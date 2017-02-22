@@ -11,3 +11,8 @@
 .bar{
   background-color: rgba(34, 34, 34, 0.5);
 }
+
+#postImage{
+  animation-name: opacity;
+  animation-duration: 1.5;
+}
