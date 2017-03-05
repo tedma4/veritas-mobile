@@ -1,5 +1,6 @@
 import {Component, ElementRef, ViewChild, OnDestroy} from '@angular/core';
 import { RouterExtensions } from "nativescript-angular/router";
+import { FloatingMenuComponent }  from '../../components/floating-menu/floating-menu.component';
 import {MapService} from "../../services/maps/map.service";
 import {ImageService} from "../../services/images/image.service";
 import {PostService} from "../../services/post/post.service";
@@ -23,8 +24,10 @@ registerElement("MapView", () => mapsModule.MapView);
   styleUrls: ['pages/map/google-map.component.css', 'app.css'],
   templateUrl: 'pages/map/google-map.component.html'
 })
-
 export class GoogleMapComponent implements OnDestroy {
+  @ViewChild(FloatingMenuComponent)
+  private floatingMenuComponent: FloatingMenuComponent;
+
   constructor(
     private _mapService: MapService, 
     private _imageService: ImageService, 
@@ -142,5 +145,9 @@ export class GoogleMapComponent implements OnDestroy {
     this._postService.postToSend = postToSend;
     this.locationSubscription.unsubscribe();
     this.routerExtensions.navigate(["/post"], { animated: false });
+  }
+
+  public toogleMenu(event){
+    this.floatingMenuComponent.toggleMenu(event);
   }
 }

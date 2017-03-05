@@ -1,5 +1,6 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
+import { FloatingMenuComponent }  from '../../components/floating-menu/floating-menu.component';
 import {NotificationsService} from "../../services/notifications/notifications.service";
 import {PostService} from "../../services/post/post.service";
 import {Notification} from "../../models/notification";
@@ -7,6 +8,8 @@ import {Post} from "../../models/post"
 import {PostToSend} from "../../models/post-to-send"
 import dialogs = require("ui/dialogs");
 import {Page} from "ui/page";
+import {Color} from "color";
+import platformModule = require("platform");
 var frameModule = require("ui/frame");
 var config = require("../../shared/config");
 
@@ -17,6 +20,10 @@ var config = require("../../shared/config");
   templateUrl: 'pages/notifications/notifications.component.html'
 })
 export class NotificationsComponent implements OnInit{
+  public isDataLoading: boolean = true;
+  public pageContent = 'collapsed';
+  public screenWidth:number;
+  public screenHeight:number;
   public _notifications: Array<Notification> = []; 
   public _apiUrl:string;
 
@@ -27,6 +34,9 @@ export class NotificationsComponent implements OnInit{
     cancelButtonText: "No"
   };
   
+  @ViewChild(FloatingMenuComponent)
+  private floatingMenuComponent: FloatingMenuComponent;
+
   constructor(
     private _notificationsService: NotificationsService,
     private _postService: PostService,
@@ -35,9 +45,14 @@ export class NotificationsComponent implements OnInit{
   ) {}
 
   ngOnInit() {
+    this.page.backgroundColor = new Color('#333333');
+    this.screenWidth = platformModule.screen.mainScreen.widthDIPs;
+    this.screenHeight = platformModule.screen.mainScreen.heightDIPs;
     this._apiUrl = config.apiUrl;
     this._notificationsService.getUserNotifications().subscribe(notifications =>{
       this._notifications = notifications;
+      this.pageContent = 'visible';
+      this.isDataLoading = false;
     }, error => alert('Unable to get notifications'));
   }
 
@@ -81,6 +96,10 @@ export class NotificationsComponent implements OnInit{
         if(_notification.id === notification.id){ _notification.notice_type = uiResponse;}
       });
     }
+  }
+
+  public toogleMenu(event){
+    this.floatingMenuComponent.toggleMenu(event);
   }
 
   public goBack(){

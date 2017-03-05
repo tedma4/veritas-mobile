@@ -1,0 +1,42 @@
+.chat-container{
+  padding-left: 15;
+  padding-right: 15;
+}
+
+.element-container{
+  margin-top: 10;
+  margin-bottom: 10;
+  width: 100%;
+  height: auto;
+}
+
+.element-right{
+  padding-left: 30;
+}
+
+.element-left{
+  padding-right: 30; 
+}
+
+.message-container{
+  padding: 10;
+  border-radius: 15;
+  height: auto;
+  width: auto;
+}
+
+.message-right{
+  background-color: #00eebc;
+  horizontal-align: right;
+}
+
+.message-left{
+  background-color: #ffffff;
+  horizontal-align: left;
+}
+
+.text{
+  font-size: 18;
+  color: #222222;
+  width: auto;
+}

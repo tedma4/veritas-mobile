@@ -1,13 +1,19 @@
 <ActionBar title="Map">
-  <NavigationButton text="Back"></NavigationButton>
+  <NavigationButton visibility="collapsed"></NavigationButton>
 </ActionBar>
 
-<DockLayout style.backgroundColor="white" stretchLastChild="false" height="100%">
-  <GridLayout dock="top" height="90%">
-    <MapView (mapReady)="onMapReady($event)" (markerSelect)="onMarkerSelect($event)" ></MapView>
-  </GridLayout>
+<AbsoluteLayout width="100%" height="100%">
+  <DockLayout style.backgroundColor="white" stretchLastChild="false" width="100%" height="100%" left="0" top="0">
+    <GridLayout dock="top" height="90%">
+      <MapView (mapReady)="onMapReady($event)" (markerSelect)="onMarkerSelect($event)" ></MapView>
+    </GridLayout>
 
-  <StackLayout dock="bottom" height="10%" orientation="horizontal" class="navigationBar">
-    <navigation-bar></navigation-bar>
+    <StackLayout dock="bottom" height="10%" orientation="horizontal" class="navigationBar">
+      <navigation-bar (toggleTheMenu)="toogleMenu($event)"></navigation-bar>
+    </StackLayout>
+  </DockLayout>
+
+  <StackLayout height="90%" width="100%" left="0" top="0" class="transparent">
+    <floating-menu></floating-menu>
   </StackLayout>
-</DockLayout>
+</AbsoluteLayout>

@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit{
     .subscribe(data => {
       this.isLoggingIn = false;
       let session = new Session(data);
-      this.routerExtensions.navigate(["/landing"], {animated: false, clearHistory: true});
+      this.routerExtensions.navigate(["/home"], {animated: false, clearHistory: true});
     }, error => {
       this.isLoggingIn = false;
       alert('Incorrect email or password');

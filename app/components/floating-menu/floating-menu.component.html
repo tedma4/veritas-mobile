@@ -1,0 +1,32 @@
+<DockLayout id="menuBackground" [visibility]="showBackgroundMenu"
+  stretchLastChild="false" (tap)="toggleMenu(null)" width="100%" height="100%">
+  <DockLayout dock="right" class="transparent" width="80%" height="100%" stretchLastChild="false">
+    <StackLayout dock="bottom" class="optionsContainer transparent" width="100%" height="auto">
+      <StackLayout id="option1" class="menuOption" orientation="horizontal"
+        (tap)="toggleMenu('/friend-list')">
+        <Image src="res://visiblegray" class="menuIcon" verticalAlignment="center"></Image>
+        <Label text="My Friends" verticalAlignment="center" class="menuText"></Label>
+      </StackLayout>
+      <StackLayout id="option2" class="menuOption" orientation="horizontal"
+        (tap)="toggleMenu('/memory-friend-selector')">
+        <Image src="res://visiblegray" class="menuIcon" verticalAlignment="center"></Image>
+        <Label text="My Memories" verticalAlignment="center" class="menuText"></Label>
+      </StackLayout>
+      <StackLayout id="option3" class="menuOption" orientation="horizontal"
+        (tap)="toggleMenu('/settings')">
+        <Image src="res://visiblegray" class="menuIcon" verticalAlignment="center"></Image>
+        <Label text="My Profile" verticalAlignment="center" class="menuText"></Label>
+      </StackLayout>
+      <StackLayout id="option4" class="menuOption" orientation="horizontal"
+        (tap)="toggleMenu('/chat')">
+        <Image src="res://visiblegray" class="menuIcon" verticalAlignment="center"></Image>
+        <Label text="Chat" verticalAlignment="center" class="menuText"></Label>
+      </StackLayout>
+      <StackLayout id="option5" class="menuOption" orientation="horizontal"
+        (tap)="logOut()">
+        <Image src="res://visiblegray" class="menuIcon" verticalAlignment="center"></Image>
+        <Label text="Log Out" verticalAlignment="center" class="menuText"></Label>
+      </StackLayout>
+    </StackLayout>
+  </DockLayout>
+</DockLayout>

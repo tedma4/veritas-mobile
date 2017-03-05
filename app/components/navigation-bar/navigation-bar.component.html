@@ -2,10 +2,18 @@
   <Image src="res://home" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
 </StackLayout>
 
+<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/google-map']" clearHistory="true" pageTransition="none">
+  <Image src="res://gps" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+</StackLayout>
+
 <StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}">
   <Image src="res://camera" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center" (tap)="takePicture()"></Image> 
 </StackLayout>
 
-<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/google-map']" clearHistory="true" pageTransition="none">
-  <Image src="res://gps" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" [nsRouterLink]="['/notifications']" pageTransition="none">
+  <Image src="res://alerticon" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
+</StackLayout>
+
+<StackLayout orientation="vertical" height="100%" width="{{navBarSectionWidth}}" (tap)="toggleMenu()">
+  <Image src="res://menuicon" class="nav-bar-icon" verticalAlignment="center" horizontalAlignment="center"></Image> 
 </StackLayout>

@@ -1,0 +1,31 @@
+#menuBackground{
+  background-color: rgba(0, 0, 0, 0.0);
+}
+
+.optionsContainer{
+  padding-right: 20;
+}
+
+.menuOption{
+  horizontal-align: right;
+  font-size: 20;
+  color: #222222;
+  background-color: #00eebc;
+  width: 250;
+  height: 45;
+  margin-top: 30;
+  border-radius: 20;
+}
+
+.menuIcon{
+  width: 30%;
+  height: 100%;
+}
+
+.menuText{
+  width: 70%;
+}
+
+.lastOption{
+  margin-bottom: 25;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { CanActivate } from "@angular/router";
-
+var appSettings = require("application-settings");
 import { RouterExtensions } from "nativescript-angular/router";
 import { SessionService } from "./services/sessions/session.service";
 
@@ -12,7 +12,8 @@ export class AuthGuard implements CanActivate {
   ) { }
 
   canActivate() {
-    if (this.sessionService.getCurrentSession()) {
+    var sessionData = appSettings.getString("sessionData");
+    if (sessionData){
       return true;
     }
     else {

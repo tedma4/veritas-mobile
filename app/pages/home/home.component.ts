@@ -1,5 +1,6 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
+import { FloatingMenuComponent }  from '../../components/floating-menu/floating-menu.component';
 import {ImageService} from "../../services/images/image.service";
 import {SessionService} from "../../services/sessions/session.service";
 import {PostService} from "../../services/post/post.service";
@@ -26,6 +27,9 @@ export class HomeComponent implements OnInit{
   private _location:any = {};
   public _posts = [];
   private uiList:any;
+
+  @ViewChild(FloatingMenuComponent)
+  private floatingMenuComponent: FloatingMenuComponent;
 
   constructor(
     private _imageService: ImageService,
@@ -83,5 +87,9 @@ export class HomeComponent implements OnInit{
     postToSend.newPost = replyPost;
     this._postService.postToSend = postToSend;
     this.routerExtensions.navigate(["/post"], { animated: false });
+  }
+
+  public toogleMenu(event){
+    this.floatingMenuComponent.toggleMenu(event);
   }
 }

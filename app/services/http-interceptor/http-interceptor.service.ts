@@ -17,7 +17,6 @@ export class HttpInterceptorService {
 	}
 
   private createAuthorizationHeader(headers: Headers) {
-    console.log('jwt: ' + this._jwt);
     if(this._jwt){
       headers.append('Authorization', this._jwt);
     }

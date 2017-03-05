@@ -10,6 +10,7 @@ import { PostComponent } from './pages/post/post.component';
 import { PostPreviewComponent } from './pages/post-preview/post-preview.component';
 import { PostUserSelectionComponent } from './pages/post-user-selection/post-user-selection.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ChatComponent } from './pages/chat/chat.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { MemoryFriendSelectorComponent } from './pages/memory-friend-selector/memory-friend-selector.component';
@@ -18,7 +19,7 @@ import { MemoryGalleryComponent } from './pages/memory-gallery/memory-gallery.co
 import { AuthGuard } from "./auth-guard.service";
 
 export const routes = [
-  { path: "", redirectTo: "/landing", pathMatch: "full" },
+  { path: "", redirectTo: "/home", pathMatch: "full" },
   { path: 'welcome', component: WelcomeComponent},
   { path: 'landing', component: LandingComponent, canActivate: [AuthGuard]},
   { path: 'friend-list', component: FriendListComponent, canActivate: [AuthGuard]},
@@ -31,6 +32,7 @@ export const routes = [
   { path: 'post-preview', component: PostPreviewComponent, canActivate: [AuthGuard]},
   { path: 'post-user-selection', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]},
   { path: 'memory-friend-selector', component: MemoryFriendSelectorComponent, canActivate: [AuthGuard]},
@@ -50,6 +52,7 @@ export const navigatableComponents = [
   PostPreviewComponent,
   PostUserSelectionComponent,
   HomeComponent,
+  ChatComponent,
   SettingsComponent,
   NotificationsComponent,
   MemoryFriendSelectorComponent,
