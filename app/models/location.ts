@@ -1,30 +1,30 @@
-interface LocationJSON{
-	latitude:string;
-  longitude:string;
+interface LocationJSON {
+  latitude: string;
+  longitude: string;
 }
 
-export class Location{
-  private _latitude:string;
-	private _longitude:string;
-	
-	constructor(object:any){
-	  this._latitude = object && object.latitude || object && object._latitude || undefined;
-	  this._longitude = object && object.longitude || object && object._longitude || undefined;
-	}
+export class Location {
+  private _latitude: string;
+  private _longitude: string;
 
-	public get latitude(): string {
-		return this._latitude;
-	}
+  constructor(object: any) {
+    this._latitude = object && object.latitude || object && object._latitude || undefined;
+    this._longitude = object && object.longitude || object && object._longitude || undefined;
+  }
 
-	public set latitude(value: string) {
-		this._latitude = value;
-	}
+  public get latitude(): string {
+    return this._latitude;
+  }
 
-	public get longitude(): string {
-		return this._longitude;
-	}
+  public set latitude(value: string) {
+    this._latitude = value;
+  }
 
-	public set longitude(value: string) {
-		this._longitude = value;
-	}
+  public get longitude(): string {
+    return this._longitude;
+  }
+
+  public set longitude(value: string) {
+    this._longitude = value;
+  }
 } 
