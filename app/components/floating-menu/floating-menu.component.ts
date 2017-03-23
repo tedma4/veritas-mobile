@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router } from "@angular/router";
 import { RouterExtensions } from "nativescript-angular/router";
 import {SessionService} from "../../services/sessions/session.service";
@@ -17,8 +17,8 @@ var enums = require("ui/enums");
   templateUrl: 'components/floating-menu/floating-menu.component.html'
 })
 export class FloatingMenuComponent implements OnInit{
-  public showBackgroundMenu: string = 'collapsed';
   private isMenuOpen: boolean = false;
+  @Output() disableMenuContainer: EventEmitter<any> = new EventEmitter();
 
   private menuElementAnimation:any = {
     curve: enums.AnimationCurve.easeInOut,
@@ -45,7 +45,6 @@ export class FloatingMenuComponent implements OnInit{
   }
 
   private displayMenu(event){
-    this.showBackgroundMenu = 'visible';
     let definitions = new Array();
     definitions = this.defineMenuAnimation('display');
     definitions.push(this.defineBackgroundAnimation('display'));
@@ -57,19 +56,18 @@ export class FloatingMenuComponent implements OnInit{
   }
 
   private hideMenu(event:any){
-    console.log(event);
     var definitions = new Array();
     definitions = this.defineMenuAnimation('hide');
     definitions.push(this.defineBackgroundAnimation('hide'));
     var animationSet = new animationModule.Animation(definitions);
     animationSet.play().then(() => {
-      this.showBackgroundMenu = 'collapsed';
+      this.disableMenuContainer.emit(null);
       if(event){
         this.routerExtensions.navigate([event], { animated: false });
       }
     }).catch((e) => {
       console.log(e.message);
-      this.showBackgroundMenu = 'collapsed';
+      this.disableMenuContainer.emit(null);
       if(event){
         this.routerExtensions.navigate([event], { animated: false });
       }

@@ -13,7 +13,7 @@
     </StackLayout>
   </DockLayout>
 
-  <StackLayout height="90%" width="100%" left="0" top="0" class="transparent">
-    <floating-menu></floating-menu>
+  <StackLayout height="90%" width="100%" left="0" top="0" class="transparent" [visibility]="enableFloatingMenu">
+    <floating-menu (disableMenuContainer)="disableMenuContainer($event)"></floating-menu>
   </StackLayout>
 </AbsoluteLayout>

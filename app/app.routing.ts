@@ -32,7 +32,7 @@ export const routes = [
   { path: 'post-preview', component: PostPreviewComponent, canActivate: [AuthGuard]},
   { path: 'post-user-selection', component: PostUserSelectionComponent, canActivate: [AuthGuard]},
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]},
+  { path: 'chat/:chatId', component: ChatComponent, canActivate: [AuthGuard]},
   { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
   { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard]},
   { path: 'memory-friend-selector', component: MemoryFriendSelectorComponent, canActivate: [AuthGuard]},

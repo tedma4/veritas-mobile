@@ -95,6 +95,7 @@ export class SessionService {
     this._currentSession = undefined;
     this._httpInterceptorService.jwt = undefined;
     appSettings.remove("sessionData");
+    appSettings.remove("chatData");
   }
 
   public turnOnLocation(){

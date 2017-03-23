@@ -21,6 +21,7 @@ var config = require("../../shared/config");
 })
 export class NotificationsComponent implements OnInit{
   public isDataLoading: boolean = true;
+  public enableFloatingMenu: string = 'collapsed';
   public pageContent = 'collapsed';
   public screenWidth:number;
   public screenHeight:number;
@@ -98,7 +99,14 @@ export class NotificationsComponent implements OnInit{
     }
   }
 
+  public disableMenuContainer(event){
+    this.enableFloatingMenu = 'collapsed';
+  }
+
   public toogleMenu(event){
+    if(this.enableFloatingMenu === 'collapsed'){
+      this.enableFloatingMenu = 'visible';
+    }
     this.floatingMenuComponent.toggleMenu(event);
   }
 

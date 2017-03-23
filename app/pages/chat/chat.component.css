@@ -20,7 +20,7 @@
 
 .message-container{
   padding: 10;
-  border-radius: 15;
+  border-radius: 10;
   height: auto;
   width: auto;
 }
@@ -39,4 +39,25 @@
   font-size: 18;
   color: #222222;
   width: auto;
+}
+
+.input-container{
+  padding: 10;
+}
+
+.input{
+  background-color: #ffffff;
+  placeholder-color: #444444;
+  border-radius: 5;
+  border-width: 0;
+  color: #222222;
+  margin: 0;
+  min-height: 45;
+  font-size: 18;
+}
+.button-circle{
+  clip-path: circle(100% at 50% 50%);
+  background-color: #009E7B;
+  padding: 5;
+  margin: 0;
 }

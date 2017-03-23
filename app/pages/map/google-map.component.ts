@@ -27,6 +27,7 @@ registerElement("MapView", () => mapsModule.MapView);
 export class GoogleMapComponent implements OnDestroy {
   @ViewChild(FloatingMenuComponent)
   private floatingMenuComponent: FloatingMenuComponent;
+  public enableFloatingMenu: string = 'collapsed';
 
   constructor(
     private _mapService: MapService, 
@@ -147,7 +148,14 @@ export class GoogleMapComponent implements OnDestroy {
     this.routerExtensions.navigate(["/post"], { animated: false });
   }
 
+  public disableMenuContainer(event){
+    this.enableFloatingMenu = 'collapsed';
+  }
+
   public toogleMenu(event){
+    if(this.enableFloatingMenu === 'collapsed'){
+      this.enableFloatingMenu = 'visible';
+    }
     this.floatingMenuComponent.toggleMenu(event);
   }
 }

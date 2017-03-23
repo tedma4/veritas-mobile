@@ -11,6 +11,7 @@ import {HttpInterceptorService} from "./services/http-interceptor/http-intercept
 import {ImageService} from "./services/images/image.service";
 import {PostService} from "./services/post/post.service";
 import {MapService} from "./services/maps/map.service"; 
+import {ChatDataService} from "./services/chat/chat-data.service"; 
 
 import { AuthGuard } from "./auth-guard.service";
 import { AppComponent } from "./app.component";
@@ -30,7 +31,8 @@ import { routes, navigatableComponents } from "./app.routing";
     FloatingMenuComponent,
     ...navigatableComponents
   ],
-  providers: [SessionService, ImageService, MapService, PostService, AuthGuard, HttpInterceptorService],
+  providers: [SessionService, ImageService, MapService, PostService, AuthGuard,
+    HttpInterceptorService, ChatDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
