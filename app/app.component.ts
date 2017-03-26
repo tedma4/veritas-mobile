@@ -4,6 +4,7 @@ import {MapService} from "./services/maps/map.service";
 import platform = require("platform");
 import {SessionService} from "./services/sessions/session.service";
 import {ChatDataService} from "./services/chat/chat-data.service";
+import {ChatCommunicationService} from "./services/chat/chat-communication.service";
 import GMSServiceKey = require('./GMSServiceKey');
 
 @Component({
@@ -14,6 +15,7 @@ export class AppComponent implements OnInit {
   constructor(
     private _sessionService: SessionService,
     private _chatDataService: ChatDataService,
+    private _chatCommunicationService: ChatCommunicationService,
     private router: Router
   ){}
 
@@ -23,5 +25,6 @@ export class AppComponent implements OnInit {
     }
     this._sessionService.turnOnLocation();
     this._chatDataService.initChatService();
+    this._chatCommunicationService.initChatCommunicationService();
   }
 }

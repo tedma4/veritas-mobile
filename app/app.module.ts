@@ -12,6 +12,7 @@ import {ImageService} from "./services/images/image.service";
 import {PostService} from "./services/post/post.service";
 import {MapService} from "./services/maps/map.service"; 
 import {ChatDataService} from "./services/chat/chat-data.service"; 
+import {ChatCommunicationService} from "./services/chat/chat-communication.service"; 
 
 import { AuthGuard } from "./auth-guard.service";
 import { AppComponent } from "./app.component";
@@ -32,7 +33,7 @@ import { routes, navigatableComponents } from "./app.routing";
     ...navigatableComponents
   ],
   providers: [SessionService, ImageService, MapService, PostService, AuthGuard,
-    HttpInterceptorService, ChatDataService],
+    HttpInterceptorService, ChatDataService, ChatCommunicationService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

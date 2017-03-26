@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild, AfterViewInit} from "@angular/core";
 import {RouterExtensions, PageRoute} from "nativescript-angular/router";
 import {SessionService} from "../../services/sessions/session.service";
 import {ChatDataService} from "../../services/chat/chat-data.service";
+import {ChatCommunicationService} from "../../services/chat/chat-communication.service";
 import scrollViewModule = require('ui/scroll-view');
 import stackLayoutModule = require('ui/layouts/stack-layout');
 import textViewModule = require('ui/text-view');
@@ -26,7 +27,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
     private page: Page,
     private pageRoute: PageRoute,
     private _sessionService: SessionService,
-    private _chatDataService: ChatDataService
+    private _chatDataService: ChatDataService,
+    private _chatCommunicationService: ChatCommunicationService
   ) {
     this.pageRoute.activatedRoute
     .switchMap(activatedRoute => activatedRoute.params)
@@ -51,6 +53,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
 
   public sendMessage():void{
     if(!this.formModel.text){return;}
+    this._chatCommunicationService.sendChatData(this.formModel.text);
     this.chatData.messages.push(
       new Message({user_id:this.currentUserId, text: this.formModel.text})
     );
@@ -64,7 +67,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
       let scrollView = this.page.getViewById('scroll') as scrollViewModule.ScrollView;
       let chatContainer = this.page.getViewById('chatContainer') as stackLayoutModule.StackLayout;
       let chatHeight: number = scrollView.scrollableHeight;
-
       //console.log(chatHeight);
       scrollView.scrollToVerticalOffset(chatHeight, false);
     }, delay);
