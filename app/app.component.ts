@@ -25,6 +25,6 @@ export class AppComponent implements OnInit {
     }
     this._sessionService.turnOnLocation();
     this._chatDataService.initChatService();
-    this._chatCommunicationService.initChatCommunicationService();
+    //this._chatCommunicationService.initChatCommunicationService();
   }
 }

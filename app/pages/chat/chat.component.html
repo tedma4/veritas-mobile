@@ -3,18 +3,21 @@
 </ActionBar>
 
 <DockLayout width="100%" height="100%" class="transparent" stretchLastChild="false">
-  <DockLayout stretchLastChild="false" dock="bottom" width="100%" minHeight="55"
-    height="auto" class="transparent input-container">
-    <StackLayout dock="right" width="70" height="auto" class="transparent">
-      <StackLayout width="auto" height="45" class="button-circle" (tap)="sendMessage()">
-        <Image src="res://sendicon" height="100%"></Image>
+  <StackLayout dock="bottom" orientation="vertical" width="100%" height="auto" class="transparent">
+    <DockLayout stretchLastChild="false" width="100%" minHeight="55"
+      height="auto" class="transparent input-container">
+      <StackLayout dock="right" width="70" height="auto" class="transparent">
+        <StackLayout width="auto" height="45" class="button-circle" (tap)="sendMessage()">
+          <Image src="res://sendicon" height="100%"></Image>
+        </StackLayout>
       </StackLayout>
-    </StackLayout>
-    <StackLayout dock="left" width="100%" height="auto" class="transparent">
-      <TextView id="textImput" [(ngModel)]="formModel.text" (tap)="scrollToBottom(200)" width="100%"
-        height="auto" hint="Type Something" class="input"></TextView>
-    </StackLayout>
-  </DockLayout>
+      <StackLayout dock="left" width="100%" height="auto" class="transparent">
+        <TextView id="textImput" (tap)="scrollToBottom(200)" [(ngModel)]="formModel.text" width="100%"
+          height="auto" hint="Type Something" class="input"></TextView>
+      </StackLayout>
+    </DockLayout>
+    <StackLayout width="100%" [height]="keyboardGap" class="transparent"></StackLayout>
+  </StackLayout>
 
   <ScrollView id="scroll" orientation="vertical" dock="top" width="100%" height="100%" class="transparent">
     <StackLayout id="chatContainer" orientation="vertical" width="100%" height="auto"

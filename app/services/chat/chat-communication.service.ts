@@ -6,16 +6,17 @@ import { Message } from "../../models/chat/message";
 
 @Injectable()
 export class ChatCommunicationService {
-  private socketURL:any = config.wsApiUrl + "/v1/cable";
-  private cable:any = ActionCable.createConsumer(this.socketURL);
+  private cable:any;
+  private socketURL:any = config.wsApiUrl + "/cable";
   private room: any;
 
   constructor() {
     ActionCable.startDebugging();
+    this.cable = ActionCable.createConsumer(this.socketURL);
   }
 
   public initChatCommunicationService() {
-    this.room = this.cable.subscriptions.create("ChatChannel", {
+    this.room = this.cable.subscriptions.create('MessageChannel', {
       connected: this.onCableConnected,
       diconnected: this.onCableDisconnected,
       received: this.onDataReceived
@@ -23,11 +24,12 @@ export class ChatCommunicationService {
   }
 
   private onCableConnected(){
-    console.log("connected to MessageChannel");
+    console.log("connected to ChatChannel");
   }
 
-  private onCableDisconnected(){
-    console.log('diconnected from MessageChannel');
+  private onCableDisconnected(data:any){
+    console.log('diconnected from ChatChannel');
+    console.log(JSON.stringify(data));
   }
 
   private onDataReceived(data){
