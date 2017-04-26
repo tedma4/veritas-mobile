@@ -1,45 +1,55 @@
 export class Message {
-  private _id: string;
   private _user_id: string;
   private _message_type: string;
-  private _text: string;
+  private _content: string;
+  private _time_stamp: string;
+  private _location: string;
 
   constructor(object: any) {
-    this._id = object && object.id || object && object._id || undefined;
     this._user_id = object && object.user_id || object && object._user_id || undefined;
     this._message_type = object && object.message_type || object && object._message_type || undefined;
-    this._text = object && object.text || object && object._text || undefined;
+    this._content = object && object.content || object && object._content || undefined;
+    this._time_stamp = object && object.time_stamp || object && object._time_stamp || undefined;
+    this._location = object && object.location || object && object._location || undefined;
   }
 
-  public get id(): string {
-    return this._id;
-  }
+	public get user_id(): string {
+		return this._user_id;
+	}
 
-  public set id(value: string) {
-    this._id = value;
-  }
+	public set user_id(value: string) {
+		this._user_id = value;
+	}
 
-  public get user_id(): string {
-    return this._user_id;
-  }
+	public get message_type(): string {
+		return this._message_type;
+	}
 
-  public set user_id(value: string) {
-    this._user_id = value;
-  }
+	public set message_type(value: string) {
+		this._message_type = value;
+	}
 
-  public get message_type(): string {
-    return this._message_type;
-  }
+	public get content(): string {
+		return this._content;
+	}
 
-  public set message_type(value: string) {
-    this._message_type = value;
-  }
+	public set content(value: string) {
+		this._content = value;
+	}
 
-  public get text(): string {
-    return this._text;
-  }
+	public get time_stamp(): string {
+		return this._time_stamp;
+	}
 
-  public set text(value: string) {
-    this._text = value;
-  }
+	public set time_stamp(value: string) {
+		this._time_stamp = value;
+	}
+
+	public get location(): string {
+		return this._location;
+	}
+
+	public set location(value: string) {
+		this._location = value;
+	}
 }

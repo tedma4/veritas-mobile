@@ -5,36 +5,18 @@ var appSettings = require("application-settings");
 
 @Injectable()
 export class ChatDataService {
-  private allChatData:any;
   constructor(
   ) {}
 
-  private getAllSavedChatData(){
-    let allChatData = appSettings.getString("chatData");
-    if(allChatData){
-      return JSON.parse(allChatData);
-    }
-    return {};
-  }
-
   public getChat(chatId:string){
-    if(this.allChatData.hasOwnProperty(chatId)){
-      return new Chat(this.allChatData[chatId]);
+    let chatData = appSettings.getString("chat-" + chatId);
+    if(chatData){
+      return new Chat(JSON.parse(chatData));
     }
     return new Chat({id: chatId, messages:[]});
   }
 
   public saveChat(chat: Chat){
-    this.allChatData[chat.id] = chat;
-    this.saveAllChatToStorage();
-  }
-
-  private saveAllChatToStorage(){
-    appSettings.remove("chatData");
-    appSettings.setString("chatData", JSON.stringify(this.allChatData));
-  }
-
-  public initChatService(){
-    this.allChatData = this.getAllSavedChatData();
+    appSettings.setString("chat-" + chat.id, JSON.stringify(chat));
   }
 }

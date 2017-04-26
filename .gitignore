@@ -25,3 +25,5 @@ app/pages/**/*.js
 app/pages/**/*.js.map
 app/services/**/*.js
 app/services/**/*.js.map
+
+*.apk

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, NgZone } from "@angular/core";
 import { RouterExtensions, PageRoute } from "nativescript-angular/router";
 import { SessionService } from "../../services/sessions/session.service";
 import { ChatDataService } from "../../services/chat/chat-data.service";
@@ -18,10 +18,11 @@ var frame = require('ui/frame');
   styleUrls: ['pages/chat/chat.component.css', 'app.css'],
   templateUrl: 'pages/chat/chat.component.html'
 })
-export class ChatComponent implements OnInit, AfterViewInit {
+export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   public formModel: any = {};
   public currentUserId: string;
   public keyboardGap: number = 0;
+  private messageSubscription:any;
   private chatData: Chat = new Chat({ messages: [] });
 
   constructor(
@@ -30,23 +31,49 @@ export class ChatComponent implements OnInit, AfterViewInit {
     private pageRoute: PageRoute,
     private _sessionService: SessionService,
     private _chatDataService: ChatDataService,
-    private _chatCommunicationService: ChatCommunicationService
+    private _chatCommunicationService: ChatCommunicationService,
+    private _ngZone: NgZone
   ) {
     this.pageRoute.activatedRoute
       .switchMap(activatedRoute => activatedRoute.params)
       .forEach((params) => {
+        this.chatData.id = params['chatId'];
         this.getChatData(params['chatId']);
+        this.joinChat(params['chatId']);
       });
   }
 
   ngOnInit() {
     this.page.backgroundColor = new Color('#333333');
-    this.setResizeScrollIOS();
-    this.currentUserId = this._sessionService.getCurrentSession().user.id;
+    this.resizeChatOnKeyboradShow();
+    this.initializeMessageSubscription();
+  }
+
+  ngOnDestroy() {
+    this.messageSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
     this.scrollToBottom(100);
+  }
+
+  private joinChat(chatId:string){
+    this.currentUserId = this._sessionService.getCurrentSession().user.id;
+    this._chatCommunicationService.joinChat(chatId, this.currentUserId);
+  }
+
+  private initializeMessageSubscription(){
+    this.messageSubscription = this._chatCommunicationService.getMessageSubject().subscribe({
+      next: (message:any) => {
+        if(message && message.chat_id === this.chatData.id){
+          this._ngZone.run(() => {
+            this.chatData.messages.push(new Message(message));
+            this._chatDataService.saveChat(this.chatData);
+            this.scrollToBottom(200);
+          });
+        }
+      }
+    });
   }
 
   private getChatData(chatId: string) {
@@ -55,11 +82,10 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public sendMessage(): void {
     if (!this.formModel.text) { return; }
-    //this._chatCommunicationService.sendChatData(this.formModel.text);
-    this.chatData.messages.push(
-      new Message({ user_id: this.currentUserId, text: this.formModel.text })
-    );
-    this._chatCommunicationService.initChatCommunicationService();
+    let message = {chat_id:this.chatData.id, user_id: this.currentUserId,
+      content: this.formModel.text, message_type:'text', time_stamp: new Date()};
+    this._chatCommunicationService.sendChatData(message);
+    this.chatData.messages.push(new Message(message));
     this._chatDataService.saveChat(this.chatData);
     this.formModel.text = '';
     this.scrollToBottom(200);
@@ -76,21 +102,25 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }, delay);
   }
 
-  private setResizeScrollIOS() {
+  private resizeChatOnKeyboradShow() {
     if (application.ios) {
       application.ios.addNotificationObserver(
         UIKeyboardWillChangeFrameNotification, (notification) => {
         let height: number = notification.userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey)
-          .CGRectValue().size.height;
-        this.keyboardGap = height;
-        this.scrollToBottom(200);
+          .CGRectValue.size.height;
+        this._ngZone.run(() => {
+          this.keyboardGap = height;
+          this.scrollToBottom(200);
+        });
       });
     } else {
       let pageFrame = frame.topmost().currentPage.android;
       pageFrame.getViewTreeObserver().addOnGlobalLayoutListener(
         new android.view.ViewTreeObserver.OnGlobalLayoutListener({
         onGlobalLayout: () => {
-          this.scrollToBottom(200);
+          this._ngZone.run(() => {
+            this.scrollToBottom(200);
+          });
         }
       }));
     }
