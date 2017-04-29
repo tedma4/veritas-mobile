@@ -41,6 +41,12 @@
   width: auto;
 }
 
+.user-name-last{
+  font-size: 12;
+  color: #ffffff;
+  margin-bottom: 4;
+}
+
 .input-container{
   padding: 10;
 }

@@ -24,6 +24,8 @@
       class="transparent chat-container">
       <StackLayout *ngFor="let message of chatData.messages" 
         [ngClass]="{'transparent element-container':true, 'element-left': currentUserId !== message.user_id, 'element-right': currentUserId === message.user_id}">
+        <Label *ngIf="currentUserId !== message.user_id" class="user-name-last"
+        textWrap="true" [text]="getUsername(message.user_id)"></Label>
         <StackLayout [ngClass]="{'message-container':true, 'message-left': currentUserId !== message.user_id, 'message-right': currentUserId === message.user_id}">
           <Label class="text" textWrap="true" [text]="message.content"> 
           </Label>

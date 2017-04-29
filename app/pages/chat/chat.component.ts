@@ -126,6 +126,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  public getUsername(userId:string){
+    return "Ted Martinez";
+  }
+
   public goBack(): void {
     this.routerExtensions.backToPreviousPage();
   }

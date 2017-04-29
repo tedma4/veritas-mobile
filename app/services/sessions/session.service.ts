@@ -94,8 +94,7 @@ export class SessionService {
     this._mapService.stopLocationWatch();
     this._currentSession = undefined;
     this._httpInterceptorService.jwt = undefined;
-    appSettings.remove("sessionData");
-    appSettings.remove("chatData");
+    appSettings.clear();
   }
 
   public turnOnLocation(){
